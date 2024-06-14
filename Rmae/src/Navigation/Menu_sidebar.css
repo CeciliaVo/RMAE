@@ -1,0 +1,121 @@
+/* ----------------------------LAYOUT SIDER -----------------------*/
+
+/* Change the sidebar background color */
+.ant-layout-sider-children {
+    background-color: #a91d1d !important;
+    height: 100vh;
+    border: 2px solid #a91d1d;
+  }
+  
+
+.ant-layout-sider {
+    background-color: #ffffff !important;
+    border-radius: 15px;
+    border-bottom: 1px solid #130303bb;
+  }  
+
+.ant-layout-sider-trigger {
+    background-color: #ffffff !important;
+    border: 2px solid #0000002a;
+}
+
+/* ----------------------------MENU ITEMS------------------------- */
+
+.ant-menu-item {
+    color: #000000 !important;
+    border-radius: 15px;
+    border-bottom: 2px solid #0000002a;
+}
+/* Change the selected item color */
+.ant-menu-item-selected {
+    background-color: #9e3a3a !important;
+    color: #ffffff !important;
+    font-weight: bold;
+}
+/*Icon color change when selected */
+.ant-menu-item-selected .anticon { 
+    color: #ffffff !important;
+}
+
+/* -----------------------USER INFO DISPLAY---------------------- */
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    padding: 16px;
+    margin-bottom: 16px;
+    border: 2px solid #0000002a;
+}
+
+.username {
+    margin: 0;
+    padding: 0;
+    font-size: 17.3px;
+    color: #000000; 
+}
+
+.email {
+    margin: 0;
+    padding: 0; 
+    font-size: 11.5px;
+    color: #000000;
+}
+
+ /*Avatar state uncollapsed */
+.user-avatar {
+    border: 3px solid #6f1212; 
+    cursor: pointer;
+}
+
+/* Avatar hover effect */
+.avatar-container {
+    position: relative;
+    display: inline-block;
+}
+
+.avatar-container:hover .user-avatar {
+    opacity: 50%;
+}
+
+.avatar-container:hover .camera-icon {
+    opacity: 1;
+}
+
+.camera-icon {
+    size: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.5s;
+    z-index: 1; /* This brings the camera icon to the front */
+}
+
+ /*Avatar state collapsed */
+.collapsed-avatar-container {
+    display: flex;
+    justify-content: center;
+    padding: 16px;
+    border-bottom: 3px solid #ffffff;
+}
+
+.collapsed-user-avatar {
+    border: 3px solid #d6d2d2; 
+    cursor: pointer;
+}
+
+/* User info edit */
+.changeinfo {
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.pencil-icon{
+    color: #000000;
+    font-size: 15px;
+    margin-left: 2px;
+    cursor: pointer;
+}

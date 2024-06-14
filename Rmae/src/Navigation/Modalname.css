@@ -1,0 +1,54 @@
+/* ----------------------------MODAL CHANGE NAME--------------------- */
+.custom-modal {
+    border-radius: 6px ; 
+    border-top: 5px solid #840707;
+}
+
+.custom-modal .ant-modal-content {
+    background-color: #ffffff;
+    border-radius: 6px; ; 
+}
+
+.custom-modal .ant-modal-header {
+    background-color: #ffffff; 
+}
+
+.custom-modal .ant-modal-title {
+    color: #e0af0e;
+    font-weight: bold;
+    font-size:17px;
+}
+
+.ant-btn-primary:not(:disabled) {
+    background-color: #840707; 
+    border-color: #000000;
+}
+
+.ant-btn-default {
+    background-color: #ffffff; 
+    border-color: #000000;
+}
+
+.u1name .ant-form-item-label > label{
+    font-weight: bold; 
+    font-size: 13px;
+    color: #0d3161;
+    margin-bottom: 5px;
+}
+
+.u1n-holder {
+    background-color: #f0f0f0;
+    border: 1px solid #840707;
+}
+
+.ufname .ant-form-item-label > label{
+    font-weight: bold; 
+    font-size: 13px;
+    color: #0d3161;
+    margin-bottom: 5px;
+}
+
+.ufn-holder {
+    background-color: #f0f0f0;
+    border: 1px solid #840707;
+}

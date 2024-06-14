@@ -1,0 +1,24 @@
+.header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    background-color: #fefefe;
+    border-bottom: 2px solid #5b0303e3;
+}
+
+.page-title{
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #e3af04;
+    margin: 0 auto;/* This will center the title */
+    padding: 0;
+}
+
+.notification-icon{
+    padding-top: 15px;
+    color: #9e3a3a;
+    cursor: pointer;
+}
+
+  

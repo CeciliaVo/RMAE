@@ -1,0 +1,159 @@
+/*------------------------------------ASSIGNMENT DISPLAY--------------------------------*/
+
+.assignments-container {
+    margin: 0 10px 10px; /* top and bottom margins are 0, right and left margins are 10px */
+    padding: 0 10px 20px; /* top padding is 0, right and left padding are 10px, bottom padding is 20px */
+    background-color: #dedede75;
+    border-radius: 8px;
+}
+
+.assignment-info {
+    padding: 15px 15px 0px 90px; /* top, right, bottom, left */
+    margin-top: 15px;
+}
+
+.assignment-label {
+    font-weight: bold; 
+    font-size: 16.5px;
+    color: #0d3161;
+}
+
+.assignment-name{
+    cursor: pointer;
+}
+
+/*Assignment Evaluation Status*/
+.assignment-status-done {
+    color: green;
+}
+
+.assignment-status-undone {
+    color: #908e8e99;
+}
+
+
+/*---------------Divider (course name)-----------------*/
+.asm-cname{
+    padding-left: 10px;
+    color: #840707 !important;
+    font-weight: bold !important;
+    font-size: 18px !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.asm-csem-year{
+    margin-top: -10px;
+    text-align: center;
+    color:#686666;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.display-assignments {
+    padding-top:10px;
+    padding-left: 90px;
+    margin-bottom: 10px;
+}
+
+/*apply white on change of evaluation status when assignment checked*/
+.textwhite-onchecked {
+    color: white;
+}
+
+.view-asm-icon{
+    cursor: pointer;
+}
+
+/*Floatbutton*/
+.creatAssignment-icon {
+    background-color: #221010;
+}
+
+.creatAssignment-icon svg {
+    fill: #c33535;
+}
+
+/*Manage assignment*/
+.row-checked {
+    width: 100%;
+    height: 50px;
+    background-color: #949292ec;
+    border-bottom: 1px solid #ffffff6a; 
+    color: white; 
+    font-weight: bold;
+    border-radius: 4px;
+}
+
+.breadcrumbassignment{
+    margin-right: 30px;
+    text-align: right;
+}
+
+.checkallassignment{
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.deleteassignmenticon{
+    color:#ec0808;
+    margin-right: 15px;
+    size: 25px;
+    cursor: pointer;
+}
+  
+
+/*------------------------------------MODAL ASSIGNMENT CREATE--------------------------------*/
+.custom-modal-assignment {
+    border-radius: 6px ; 
+    border-top: 5px solid #840707;
+}
+
+.custom-modal-assignment .ant-modal-title {
+    font-size: 20px;
+    color: #840707;
+    font-weight: bold;
+    margin-bottom: 18px;
+}
+
+/*assignment Name*/
+.assignmentname .ant-form-item-label > label {
+    font-weight: bold; 
+    font-size: 14px;
+    color: #000000;
+}
+
+.asm-nameholder {
+    background-color: #f0f0f0;
+    border: 1px solid #840707;
+    width: 400px;
+}
+
+
+/*assignment file upload*/
+.asmfileupload .ant-form-item-label > label {
+    font-weight: bold; 
+    font-size: 14px;
+    color: #000000;
+}
+
+.asmfileupload .ant-form-item-extra {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #686666;
+}
+
+/*Confirm create asm*/
+.custom-ok-button {
+    background-color: #840707; 
+    border-color: #000000;
+}
+
+.returnpage-icon{
+    margin-right: 10px;
+    margin-top: 20px;
+    font-weight: bold;
+    cursor:pointer;
+}
+
+/* .manage-page-state {
+    margin-left:30px;
+    display: flex;
+} */

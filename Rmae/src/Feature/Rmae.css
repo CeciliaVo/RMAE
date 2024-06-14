@@ -1,0 +1,161 @@
+/*------------------------------------ASSIGNMENT DISPLAY FOR MARKING--------------------------------*/
+
+.manage-page-state {
+    margin-left:30px;
+    display: flex;
+}
+
+.returnpage-icon{
+    margin-right: 10px;
+    margin-top: 20px;
+    font-weight: bold;
+    cursor:pointer;
+}
+
+.search-box{
+    margin-right: 30px;
+    margin-bottom: 20px;
+    text-align: right;
+}
+
+.search-box-component{
+    border: 2px solid #f1be05;
+    border-radius: 5px;
+}
+
+.assignments-container {
+    margin: 0 10px 10px;
+    padding: 0 10px 20px;
+    background-color: #dedede75;
+    border-radius: 8px;
+}
+
+.assignment-info {
+    padding: 15px 15px 0px 50px; /*top,right,bottom,left*/
+}
+
+.asm-label-rmae {
+    font-weight: bold; 
+    font-size: 17px;
+    color: #0d3161;
+}
+
+.assignment-name{
+    cursor: pointer;
+}
+
+.display-assignments {
+    padding-top:15px;
+    padding-left: 50px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #e8e6e6;
+}
+ 
+/* Hover to show the assignmemt detai for marking */
+.view-asm-detail-icon{
+    cursor: pointer;
+    color:#76787a;
+    font-size: 18px;
+}
+
+.tooltip-label {
+    font-weight: bold;
+}
+
+.tooltip-label {
+    font-weight: bold;
+}
+
+.tooltip-value {
+    font-size: 12px;
+}
+/* --------------------------------------------- */
+
+.start-eva-icon{
+    font-size: 18px;
+    cursor: pointer;
+    color:#0d3161;
+}
+
+.process-eva-icon{
+    font-size: 18px;
+    cursor: pointer;
+    color:#0d3161;
+}
+
+/* Divider */
+.divi-rmae {
+    padding-left: 500px;
+    margin-bottom: 5px;
+    border-top: 2px solid #e2cf89ba !important;
+}
+
+.divi-rmae .ant-divider {
+    border-top: 2px solid #e2cf89ba !important;
+}
+
+.progress-announcement{
+    font-size: 10px;
+}
+
+/* -----------Ask users to input the Privacy Protection info----------------- */
+.custom-modal-eva-progress {
+    border-radius: 6px ; 
+    border-top: 5px solid #840707;
+}
+
+.custom-modal-eva-progress .ant-modal-title {
+    font-size: 20px;
+    color: #840707;
+    font-weight: bold;
+    margin-bottom: 18px;
+    
+}
+
+/* steps bar */
+.eva-progress {
+    width: 570px; 
+}
+
+.eva-progress .ant-steps-item-title {
+    font-size: 15px;
+    font-weight:bold;
+}
+
+.step-description{
+    font-style: italic;
+}
+
+.sensi-data-choose > * {
+    margin-top: 10px; 
+}
+
+.input-new-op {
+    width: 300px;
+    margin-right:10px;
+}
+
+.delete-sensi-data-option {
+    font-size: 12px;
+    color: #840707;
+    cursor: pointer;
+}
+
+.del-sensi-data-option-disable {
+    font-size: 12px;
+    color: #C7CBCC;
+    cursor: not-allowed;
+}
+
+/* Add new field for sensitive data */
+.add-sensidata-button {
+    background-color: #0d3161; 
+    color: white; 
+}
+
+/*Confirm*/
+.custom-ok-button {
+    background-color: #840707; 
+    border-color: #000000;
+}
+
