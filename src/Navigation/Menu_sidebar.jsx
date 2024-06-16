@@ -24,7 +24,7 @@ function getItem(label, key, icon, setPageTitle) {
 
 // Sidebar component
 const MenuSidebar = ({ setPageTitle }) => {
-    const [collapsed, setCollapsed] = useState(true); // State to manage the collapsed state of the Sider
+    const [collapsed, setCollapsed] = useState(false); // State to manage the collapsed state of the Sider
     /*USER INFORMATION*/
     const [showCameraIcon, setShowCameraIcon] = useState(false); // State to manage avatar change
     const [userAvatar, setUserAvatar] = useState(UserDefaultAvatar); // Set the default avatar
