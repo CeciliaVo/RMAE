@@ -107,7 +107,6 @@ const MenuSidebar = ({ setPageTitle }) => {
     };
 
 
-    // Function to handle change name Cancel
     const cancelUNameChange = () => {
         setFirstName(''); 
         setFamilyName(''); 
