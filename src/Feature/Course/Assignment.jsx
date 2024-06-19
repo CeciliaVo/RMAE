@@ -7,7 +7,6 @@ import { IoDocumentTextSharp } from "react-icons/io5";
 import { LuArrowLeftFromLine } from "react-icons/lu";
 //import { BsCheckCircleFill } from "react-icons/bs"; 
 import './Assignment.css';
-import '../../Index.css';
 import ReturnPrePage from './Feature/Course/ReturnPage';
 
 function getOrdinalSuffix(date) {

@@ -1,0 +1,262 @@
+/* HEADER---------------------------------------- */
+.manage-page-state {
+    margin-left:30px;
+    display: flex;
+}
+
+.returnpage-icon{
+    margin-right: 10px;
+    margin-top: 10px;
+    font-weight: bold;
+    cursor:pointer;
+}
+
+.eva-progress {
+    margin-left: 5px;
+    width: 500px; 
+}
+
+.eva-progress .ant-steps-item-title {
+    font-size: 15px;
+    font-weight:bold;
+}
+
+.search-box {
+    margin-top:-20px;
+    margin-right: 30px;
+    margin-bottom: 10px;
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.search-box-component{
+    text-align: left;
+    border: 2px solid #f1be05;
+    border-radius: 5px;
+}
+
+.pre-file{
+    font-size:20px;
+    margin-left: 10px;
+    margin-top: 3px;
+    padding-top: 1px;
+    color:#840707;
+    background-color: #f1be05;
+    border: 2px solid #0d3161;
+}
+
+.cur-file{
+    margin-top: 3px;
+    margin-left: 5px;
+    padding-top: 1px;
+}
+
+.next-file{
+    font-size:20px;
+    margin-left: 5px; 
+    margin-top: 3px;
+    padding-top: 1px;
+    color:#840707;
+    background-color: #f1be05;
+    border: 2px solid #0d3161;
+}
+
+.dvider-line{
+    margin-top: -8px;
+    margin-left: 10px; 
+    font-size: 35px;
+    color:#840707;
+    font-weight: bolder;
+}
+
+.save-all{
+    height: 30px;
+    margin-left: 10px; 
+    padding-top: 1px;
+    font-size:14px;
+    color:#0d3161;
+    font-weight: bold;
+    background-color: #f1be05;
+    border: 2px solid #0d3161;
+}
+
+.icon-save-all{
+    color:#7d0b0b;
+    font-size: 18px;
+}
+
+.auto-eva-progress{
+    padding-top: 2px;
+    margin-left: 10px;
+    font-size: 25px;
+    color:#7d0b0b;
+    cursor:pointer;
+}
+
+.auto-eva-progress-disabled {
+    padding-top: 2px;
+    margin-left: 10px;
+    font-size: 25px;
+    opacity: 0.5;
+    filter: grayscale(100%);
+    cursor: not-allowed;
+}
+
+.pp-container {
+    min-height: 50vh;
+    margin: -30px 10px 10px;
+    padding: 20px 10px 20px;
+    background-color: #dedede75;
+    border-radius: 8px;
+}
+
+/* PrivacyProtection.css */
+
+.Sensitive-Data-Removed-Header{
+    margin-left: 20px;
+    border-radius: 8px 8px 0 0;
+    color:#ffffff; 
+    background-color: #0d3161;
+    box-shadow: 5px 0 #cbc9c98b;
+    border-top: 2px solid #a00909;
+    border-left: 2px solid #a00909; 
+    border-right: 2px solid #a00909;  
+}
+
+.sensitive-data-removed{
+    min-height: 70vh;
+    max-height: 100px;
+    margin-left: 20px;
+    border-radius: 0 0 8px 8px;
+    background-color: #ffffff;
+    box-shadow: 5px 8px #cbc9c98b;
+    border-left: 2px solid #a00909;
+    border-right: 2px solid #a00909; 
+    border-bottom: 2px solid #a00909;  
+    max-height: 500px;
+    overflow: auto;
+}
+
+.count-removed-data{
+    margin-top: 5px;
+    padding: 3px 0 8px 20px;
+    font-weight: bold;
+    border-bottom: 1px solid #a00909;
+}
+
+.label-sdr{
+    margin-top: -14px;
+    padding: 5px 0 5px 20px; /*top-right-bot-left*/
+    background:#ffffff;
+    border-top: 1px solid #a00909; 
+    border-bottom: 2px solid #a00909; 
+}
+
+.label-sdr-1 {
+    font-weight: bold; 
+    font-size: 16px;
+    color: #a00909;
+    white-space: nowrap;
+}
+
+.sdr{
+    padding: 10px 0 10px 20px;
+}
+
+.sdr-display{
+    white-space: nowrap;
+    color:#1a72be;
+}
+
+.Transfer-sensi-word{
+    min-height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding-left: 20px;
+}
+
+.Transfer-sensi-word .ant-btn-primary:not(:disabled) {
+    background-color: #840707; 
+    border: 2px solid #0d3161;
+}
+
+.arowright {
+    border-radius: 5px;
+    border: 2px solid #a00909; 
+    background-color: #ffffff;
+    font-size: 15px;
+    padding:5px;
+    cursor: pointer;
+}
+
+
+.Student-Work-Header {
+    margin-left: 20px;
+    border-radius: 8px 8px 0 0;
+    color:#ffffff; 
+    background-color: #0d3161;
+    box-shadow: 5px 0 #cbc9c98b;
+    border-top: 2px solid #a00909;
+    border-left: 2px solid #a00909; 
+    border-right: 2px solid #a00909;  
+}
+
+.student-work-info {
+    margin-top: 5px;
+    padding: 0 1px 8px 20px;
+    font-weight: bold;
+    font-size:16px;
+}
+
+.icon-save{
+    margin-right: 10px;
+    padding-bottom: 5px;
+    margin-top: -38px;
+    cursor:pointer;
+    text-align: right;
+    font-size: 20px;
+}
+
+
+.student-work-display{
+    min-height: 75vh;
+    max-height: 100px;
+    margin-top: -10px;
+    margin-left: 20px;
+    border-radius: 0 0 8px 8px;
+    background-color: #ffffff;
+    box-shadow: 5px 8px #cbc9c98b;
+    border: 2px solid #a00909; 
+    overflow: auto;
+}
+/* -----------Ask users to input the Auto Evaluation info----------------- */
+.custom-modal-eva-progress {
+    border-radius: 6px ; 
+    border-top: 5px solid #840707;
+}
+
+.custom-modal-eva-progress .ant-modal-title {
+    font-size: 20px;
+    color: #840707;
+    font-weight: bold;
+    margin-bottom: 18px;
+    
+}
+
+.eva-progress {
+    width: 570px; 
+}
+
+.eva-progress .ant-steps-item-title {
+    font-size: 15px;
+    font-weight:bold;
+}
+
+.custom-ok-button {
+    margin-top: 20px;
+    background-color: #840707; 
+    border-color: #000000;
+}

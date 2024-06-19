@@ -142,6 +142,7 @@
 
 /*Confirm create asm*/
 .custom-ok-button {
+    margin-top: -20px;
     background-color: #840707; 
     border-color: #000000;
 }
@@ -153,7 +154,7 @@
     cursor:pointer;
 }
 
-/* .manage-page-state {
+.manage-page-state {
     margin-left:30px;
     display: flex;
-} */
+}

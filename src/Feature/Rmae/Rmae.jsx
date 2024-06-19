@@ -5,7 +5,7 @@ import { FaGooglePlay } from "react-icons/fa";
 import { BsPersonLock } from "react-icons/bs";
 import { IoTimerSharp } from "react-icons/io5";
 import { LuArrowLeftFromLine } from "react-icons/lu";
-import ReturnPrePage from './Course/ReturnPage';
+import ReturnPrePage from '../Course/ReturnPage';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 
 import './Rmae.css';
