@@ -256,7 +256,41 @@
 }
 
 .custom-ok-button {
-    margin-top: 20px;
+    margin-top: -30px;
     background-color: #840707; 
     border-color: #000000;
+}
+
+.instruction-input .ant-form-item-label > label {
+    margin-top: 20px;
+    font-weight: bold; 
+    font-size: 14px;
+    color: #000000;
+}
+
+.asm-upload-mc .ant-form-item-label > label {
+    margin-top: -20px;
+    margin-bottom: -20px;
+    font-weight: bold; 
+    font-size: 14px;
+    color: #000000;
+}
+
+.asm-upload-quests .ant-form-item-label > label {
+    margin-top: -60px;
+    font-weight: bold; 
+    font-size: 14px;
+    color: #000000;
+}
+
+.asmfileupload .ant-form-item-extra {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #686666;
+}
+
+.errorMessage {
+    color:#ff0000;
+    position: relative;
+    left: 0; 
 }

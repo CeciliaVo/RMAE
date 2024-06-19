@@ -65,6 +65,7 @@ const Assignment = () => {
         setAssignmentName('');
         setOpen(false);
         setError('');
+        setAsmFiles([]);
     };
 
     const uploadAsmWork = {
@@ -106,13 +107,13 @@ const Assignment = () => {
                 <Form.Item label = 'Name' className="assignmentname">
                     <Input className="asm-nameholder" placeholder="" value={assignmentName} onChange={assignmentname => setAssignmentName(assignmentname.target.value)} />
                 </Form.Item>
-                <Form.Item className='asmfileupload' label="Upload" extra="Select file to upload">
+                <Form.Item className='asmfileupload' label="Student Submission" extra="Select file to upload">
                     <Upload fileList={asmFiles} onRemove={uploadAsmWork.onRemove} beforeUpload={uploadAsmWork.beforeUpload}>
                         <Button icon={<UploadOutlined />}>Select File</Button>
                     </Upload>
                 </Form.Item>
             </Form>
-            {error && <div style={{ color: 'red', marginTop: '20px' }}>{error}</div>}
+            {error && <div style={{ color: 'red', marginTop: '-20px', marginBottom: '-20px' }}>{error}</div>}
         </Modal>
 
         {/*previous page return*/}

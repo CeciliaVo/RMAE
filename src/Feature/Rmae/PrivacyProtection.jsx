@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Divider, Row, Col, Select, Checkbox, Button, Steps, Modal, Input  } from 'antd';
+import { Divider, Row, Col, Select, Checkbox, Button, Steps, Modal, Input, Upload, Form, message} from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 import { LuArrowLeftFromLine, LuSaveAll, LuSave } from "react-icons/lu";
 import { FaArrowRightToBracket, FaCaretLeft, FaCaretRight } from "react-icons/fa6";
 import { FaGooglePlay } from "react-icons/fa";
@@ -79,15 +80,19 @@ const PrivacyProtection = () => {
     const [currentFileIndex, setCurrentFileIndex] = useState(1);
     const [isFileSaved, setIsFileSaved] = useState(database[0]["File Name"].map(() => false)); // Track save state for each file
     const [isAllSaved, setIsAllSaved] = useState(false); // Track if all files are saved
+    //asm marking criteria and questions:
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [instruction, setInstruction] = useState('');
+    const [asmMCFiles, setAsmMCFiles] = useState([]);
+    const [asmQuestsFiles, setAsmQuestsFiles] = useState([]);
+    const [error, setError] = useState('');
 
     useEffect(() => {
         setModifiedStudentWork(database[0]["Student Work"][selectedFileIndex]);
         setCheckedList([]);
         setSensitiveDataRemoved(database[0]["Sensitive Data Removed"][selectedFileIndex]);
-        setIsAllSaved(false); // Reset the isAllSaved state when switching files
     }, [selectedFileIndex]);
-
+    
     const selectStudentWork = (value) => {
         const selectedIndex = database[0]["File Name"].indexOf(value);
         setSelectedFileIndex(selectedIndex);
@@ -164,13 +169,52 @@ const PrivacyProtection = () => {
     };
 
     const acptData4AI = () => {
+        if (asmMCFiles.length === 0 || asmQuestsFiles.length === 0) {
+            setError('Marking criteria and questions for the assignment are required');
+            return;
+        }
         setIsModalOpen(false);
+        setAsmMCFiles([]);
+        setAsmQuestsFiles([]);
+        setInstruction('');
     };
+    
     
     const cancelData4AI = () => {
         setIsModalOpen(false);
+        setAsmMCFiles([]); 
+        setAsmQuestsFiles([]); 
+        setInstruction(''); 
+    };
+    
+
+    const onInstructionInput = instructionin => {
+        setInstruction(instructionin.target.value);
     };
       
+      
+    const uploadAsmMC = {
+        onRemove: file => {
+            setAsmMCFiles(asmMCFiles.filter(item => item !== file));
+        },
+        beforeUpload: file => {
+            setAsmMCFiles([file]); 
+            return false;
+        },
+        fileList: asmMCFiles,
+    };
+    
+    const uploadAsmQuests = {
+        onRemove: file => {
+            setAsmQuestsFiles(asmQuestsFiles.filter(item => item !== file));
+        },
+        beforeUpload: file => {
+            setAsmQuestsFiles([file]); 
+            return false;
+        },
+        fileList: asmQuestsFiles,
+    };
+    
     return (
         <>
             {/*previous page return*/}
@@ -178,7 +222,7 @@ const PrivacyProtection = () => {
                 <LuArrowLeftFromLine className='returnpage-icon' size={25} onClick={ReturnPrePage} />
             </div>
 
-            <Divider orientation='left' style={{marginTop:'-28px',marginBottom:'-35px',paddingLeft:'30px;' }}>
+            <Divider orientation='left' style={{marginTop:'-28px',marginBottom:'-35px',paddingLeft:'30px' }}>
                     <Steps
                         className = "eva-progress"
                         current={0}
@@ -242,7 +286,11 @@ const PrivacyProtection = () => {
                 >
                     Save all
                 </Button>
-                <FaGooglePlay className={isAllSaved ? 'auto-eva-progress' : 'auto-eva-progress-disabled'} onClick={inputData4AI} />
+
+                {isAllSaved ? 
+                    <FaGooglePlay className='auto-eva-progress' onClick={inputData4AI} /> :
+                    <FaGooglePlay className='auto-eva-progress-disabled' />
+                }
             </div>
 
             <div className='pp-container'>
@@ -311,7 +359,30 @@ const PrivacyProtection = () => {
                         },
                     ]}
                 />
-                <Input.TextArea showCount maxLength={4000} onChange={onChange} placeholder="can resize" />
+                <Form layout="vertical">
+                    <Form.Item label="Instructions" className='instruction-input'>
+                        <Input.TextArea showCount maxLength={4000} onChange={onInstructionInput} style={{marginBottom:'-10px'}} />
+                    </Form.Item>
+                    <Form.Item 
+                        label="Marking Criteria" 
+                        className='asm-upload-mc' 
+                        extra={asmMCFiles.length ? "" : "Select file to upload"}
+                    >
+                        <Upload {...uploadAsmMC}>
+                            <Button icon={<UploadOutlined />}>Upload</Button>
+                        </Upload>
+                    </Form.Item>
+                    <Form.Item 
+                        label="Assignment Questions" 
+                        className='asm-upload-quests' 
+                        extra={asmQuestsFiles.length ? "" : "Select file to upload"}
+                    >
+                        <Upload {...uploadAsmQuests}>
+                            <Button icon={<UploadOutlined />}>Upload</Button>
+                        </Upload>
+                        {error && <div className="errorMessage">{error}</div>}
+                    </Form.Item>
+                </Form>
             </Modal>
 
         </>
