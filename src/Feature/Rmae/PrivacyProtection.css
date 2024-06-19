@@ -248,6 +248,7 @@
 
 .eva-progress {
     width: 570px; 
+    margin-bottom: -30px;
 }
 
 .eva-progress .ant-steps-item-title {
@@ -255,10 +256,19 @@
     font-weight:bold;
 }
 
-.custom-ok-button {
-    margin-top: -30px;
-    background-color: #840707; 
-    border-color: #000000;
+.rmit-spider{
+    margin-left:6px;
+    margin-bottom: -45px;
+    font-size: 20px;
+    color:#000000;
+}
+
+.intro-ai{
+    margin-right: 6px;
+    margin-left:30px;
+    text-align: justify;
+    font-style: italic;
+    color:#0d3161;
 }
 
 .instruction-input .ant-form-item-label > label {
@@ -269,11 +279,17 @@
 }
 
 .asm-upload-mc .ant-form-item-label > label {
-    margin-top: -20px;
     margin-bottom: -20px;
     font-weight: bold; 
     font-size: 14px;
     color: #000000;
+}
+
+.asm-upload-mc .ant-form-item-extra {
+    margin-top:5px;
+    margin-bottom: -15px;
+    font-size: 14px;
+    color: #686666;
 }
 
 .asm-upload-quests .ant-form-item-label > label {
@@ -283,14 +299,22 @@
     color: #000000;
 }
 
-.asmfileupload .ant-form-item-extra {
-    margin-top: 10px;
+.asm-upload-quests .ant-form-item-extra {
+    margin-top:5px;
+    margin-bottom: -20px;
     font-size: 14px;
     color: #686666;
 }
 
 .errorMessage {
+    margin-top: 5px;
     color:#ff0000;
     position: relative;
     left: 0; 
+}
+
+.custom-ok-button {
+    margin-top: -30px;
+    background-color: #840707; 
+    border-color: #000000;
 }

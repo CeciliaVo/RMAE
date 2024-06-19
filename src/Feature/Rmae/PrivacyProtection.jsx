@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Divider, Row, Col, Select, Checkbox, Button, Steps, Modal, Input, Upload, Form, message} from 'antd';
+import { Divider, Row, Col, Select, Checkbox, Button, Steps, Modal, Input, Upload, Form} from 'antd';
+import { GiSpiderFace } from "react-icons/gi";
 import { UploadOutlined } from '@ant-design/icons';
 import { LuArrowLeftFromLine, LuSaveAll, LuSave } from "react-icons/lu";
 import { FaArrowRightToBracket, FaCaretLeft, FaCaretRight } from "react-icons/fa6";
@@ -360,6 +361,14 @@ const PrivacyProtection = () => {
                     ]}
                 />
                 <Form layout="vertical">
+                    <GiSpiderFace className='rmit-spider'/>
+                    <p className="intro-ai" >
+                        Hello! I’m your digital assistant for today’s assignment marking. 
+                        My goal is to make your evaluation process as smooth and accurate as possible. 
+                        Please provide clear and in-depth instructions for the evaluation process. 
+                        Your detailed guidance will ensure that the auto-evaluation aligns with your expectations and standards. 
+                        Let’s get started on this journey towards efficient and effective assignment marking!
+                    </p>
                     <Form.Item label="Instructions" className='instruction-input'>
                         <Input.TextArea showCount maxLength={4000} onChange={onInstructionInput} style={{marginBottom:'-10px'}} />
                     </Form.Item>
