@@ -13,12 +13,14 @@
 }
 
 .search-box{
+    margin-top: -25px;
     margin-right: 30px;
     margin-bottom: 20px;
     text-align: right;
 }
 
 .search-box-component{
+    text-align: left;
     border: 2px solid #f1be05;
     border-radius: 5px;
 }

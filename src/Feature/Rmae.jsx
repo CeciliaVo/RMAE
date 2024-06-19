@@ -150,7 +150,7 @@ const Rmae = () => {
                 <Col span={8}><div className="asm-label-rmae"><b>Progress</b></div></Col>
             </Row>
 
-            <Divider  className='divi-rmae'  orientation = 'left'></Divider>
+            <Divider  className='divi-rmae'/>
 
             {assignments.map((assignment) => (
                 <div key={assignment.id}>
