@@ -223,7 +223,7 @@ const PrivacyProtection = () => {
                 <LuArrowLeftFromLine className='returnpage-icon' size={25} onClick={ReturnPrePage} />
             </div>
 
-            <Divider orientation='left' style={{marginTop:'-28px',marginBottom:'-35px',paddingLeft:'30px' }}>
+            <Divider orientation='left' style={{marginTop:'-14px',marginBottom:'-48px',paddingLeft:'30px' }}>
                     <Steps
                         className = "eva-progress"
                         current={0}
