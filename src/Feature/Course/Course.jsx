@@ -17,6 +17,7 @@ import { FaTrashCan } from "react-icons/fa6";
 import { CourseEndpoint, SchoolEndpoint } from "../../constants/endpoints";
 import request, { displaySuccessMessage } from "../../utils/request";
 import { useForm } from "antd/es/form/Form";
+import { useNavigate } from 'react-router-dom';
 import "./Course.css";
 
 const initSchoolValues = {
@@ -25,6 +26,7 @@ const initSchoolValues = {
 };
 
 const Course = () => {
+  const navigate = useNavigate();
   const [form] = useForm();
   const [isOpen, setOpen] = useState(false);
   const [isAllChecked, setIsAllChecked] = useState(false);
@@ -111,6 +113,10 @@ const Course = () => {
     displaySuccessMessage("Added new course")
     setKeyCount(keyCount+1)
   };
+
+  const handleViewAssignment = (courseID) => {
+    navigate(`/asm/${courseID}`)
+  }
 
   return (
     <>
@@ -248,6 +254,7 @@ const Course = () => {
                 key={index}
                 course={course}
                 onCheckboxChange={() => selectCourse(index)}
+                handleViewAssignment={() => handleViewAssignment(course.id)}
               />
             </>
           ))}
@@ -257,7 +264,7 @@ const Course = () => {
 };
 
 //Whenever the user create a new course, the course will be added.
-const CourseDisplay = ({ course, onCheckboxChange }) => (
+const CourseDisplay = ({ course, onCheckboxChange, handleViewAssignment }) => (
   <div className={course.checked ? "row-checked" : ""}>
     <Row className="displaycourse">
       <Col span={1}>
@@ -269,7 +276,9 @@ const CourseDisplay = ({ course, onCheckboxChange }) => (
       </Col>
 
       <Col span={8} className="course-name">
+        <div onClick={() => handleViewAssignment()}>
         {course.name}
+        </div>
       </Col>
 
       <Col span={5}>{course.code}</Col>

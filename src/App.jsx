@@ -5,7 +5,8 @@ import MenuSidebar from './Navigation/Menu_sidebar';
 import Navbar from './Navigation/Navbar';
 import Course from './Feature/Course/Course';
 import Homepage from './Feature/Homepage';
-import Rmae from './Feature/Rmae/Rmae'
+import Rmae from './Feature/Rmae/Rmae';
+import Assignment from './Feature/Course/Assignment';
 
 const { Content } = Layout;
 
@@ -25,6 +26,7 @@ const App = () => {
                         <Route path="/homepage" element={<Homepage />} />
                         <Route path="/courses" element={<Course />} />
                         <Route path="/ai-assessment" element={<Rmae />} />
+                        <Route path="/asm/:courseID" element={<Assignment />} />
                     </Routes>
                     </Content>
                 </Layout>
