@@ -8,5 +8,6 @@ export const SchoolEndpoint = {
 }
 
 export const AssignmentEndpoint = {
+    'add': "assignment/add",
     'searchByCourseID': "assignment/search_by_course"
 }

@@ -90,7 +90,6 @@ const Course = () => {
     const selectedSchool = schools.find(
       (school) => school.id === parseInt(e.key)
     );
-    console.log(selectedSchool);
     setCourseSchool(selectedSchool);
     form.setFieldsValue({ school_id: selectedSchool.id });
   };
@@ -108,7 +107,6 @@ const Course = () => {
     const value = form.getFieldValue();
     const endpoint = CourseEndpoint["add"];
     const resp = await request.post(endpoint, value);
-    console.log(resp.status_code)
     setOpen(false)
     displaySuccessMessage("Added new course")
     setKeyCount(keyCount+1)
