@@ -6,3 +6,7 @@ export const CourseEndpoint = {
 export const SchoolEndpoint = {
     'search': "school/search"
 }
+
+export const AssignmentEndpoint = {
+    'searchByCourseID': "assignment/search_by_course"
+}
