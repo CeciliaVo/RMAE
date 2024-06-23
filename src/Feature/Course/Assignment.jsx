@@ -30,7 +30,9 @@ const Assignment = () => {
     //Create a new assignment
     const [assignmentName, setAssignmentName] = useState('');
     //const [assignmentStatus, setAssignmentStatus] = useState('Undone');
-    const [asmFiles, setAsmFiles] = useState([]);
+    const [asmStudentWorkFiles, setAsmStudentWorkFiles] = useState([]);
+    const [asmMCFiles, setAsmMCFiles] = useState([]);
+    const [asmQuestsFiles, setAsmQuestsFiles] = useState([]);
     const [error, setError] = useState('');
     
     //Display the assignment
@@ -43,44 +45,72 @@ const Assignment = () => {
     };
 
     const assignmentCreate = () => {
-        if (!assignmentName) {
-            setError('Assignment Name is required');
+        // Trim assignmentName before checking its length
+        const trimmedAssignmentName = assignmentName.trim();
+    
+        // Check if asmStudentWorkFiles is empty or contains only empty strings
+        const isAsmStudentWorkFilesInvalid = asmStudentWorkFiles.length === 0 || asmStudentWorkFiles.some(file => file.name.trim().length < 5 || file.name.startsWith(' '));
+    
+        if (trimmedAssignmentName.length === 0 || isAsmStudentWorkFilesInvalid || asmMCFiles.length === 0 || asmQuestsFiles.length === 0) {
+            setError('Assignment Name, Student Work Submission, Marking Criteria and Assignment Questions are required');
         } else {
             // Check if a assignment with the same name already exists
             if (assignmentExists) {
                 setError('A assignment with the same name already exists');
             } else {
                 const assignmentDate = new Date();
-                setAssignments([...assignments, { name: assignmentName, date: assignmentDate, checked: false, files: asmFiles, evaluationStatus: 'Undone' }]); 
+                setAssignments([...assignments, { name: trimmedAssignmentName, date: assignmentDate, checked: false, files: asmStudentWorkFiles, evaluationStatus: 'Undone' }]); 
                 setOpen(false);
                 setError('');
                 // Reset the assignment name and file list
                 setAssignmentName('');
-                setAsmFiles([]);
+                setAsmStudentWorkFiles([]);
+                setAsmMCFiles([]);
+                setAsmQuestsFiles([]);
             }
         }
     };
-  
+    
     const cancelAssignmentSet = () => {
         setAssignmentName('');
+        setAsmMCFiles([]);
+        setAsmQuestsFiles([]);
+        setAsmStudentWorkFiles([]);
         setOpen(false);
         setError('');
-        setAsmFiles([]);
     };
 
     const uploadAsmWork = {
         onRemove: file => {
-            setAsmFiles(asmFiles.filter(item => item !== file));
+            setAsmStudentWorkFiles(asmStudentWorkFiles.filter(item => item !== file));
         },
         beforeUpload: file => {
-            if (asmFiles.length >= 1) {
-                message.error('You can only upload one file!');
-                return false;
-            }
-            setAsmFiles([file]);
+            setAsmStudentWorkFiles([file]);
             return false;
         },
-        fileList: asmFiles,
+        fileList: asmStudentWorkFiles,
+    };
+
+    const uploadAsmMC = {
+        onRemove: file => {
+            setAsmMCFiles(asmMCFiles.filter(item => item !== file));
+        },
+        beforeUpload: file => {
+            setAsmMCFiles([file]); 
+            return false;
+        },
+        fileList: asmMCFiles,
+    };
+    
+    const uploadAsmQuests = {
+        onRemove: file => {
+            setAsmQuestsFiles(asmQuestsFiles.filter(item => item !== file));
+        },
+        beforeUpload: file => {
+            setAsmQuestsFiles([file]); 
+            return false;
+        },
+        fileList: asmQuestsFiles,
     };
     
     //Assignment manage state
@@ -107,13 +137,38 @@ const Assignment = () => {
                 <Form.Item label = 'Name' className="assignmentname">
                     <Input className="asm-nameholder" placeholder="" value={assignmentName} onChange={assignmentname => setAssignmentName(assignmentname.target.value)} />
                 </Form.Item>
-                <Form.Item className='asmfileupload' label="Student Submission" extra="Select file to upload">
-                    <Upload fileList={asmFiles} onRemove={uploadAsmWork.onRemove} beforeUpload={uploadAsmWork.beforeUpload}>
+                <Form.Item 
+                    className='asmfileupload' 
+                    label="Student Works Submission" 
+                    extra={asmStudentWorkFiles.length ? "" : "Select file to upload"}
+                >
+                    <Upload {...uploadAsmWork}>
                         <Button icon={<UploadOutlined />}>Select File</Button>
                     </Upload>
                 </Form.Item>
+                <p className="instruction-ams" >
+                    Please provide <b>'Questions'</b> and <b>'Marking Criteria'</b> relating to the assignment for the evaluation process.
+                </p>
+                <Form.Item 
+                    label="Assignment Questions" 
+                    className='asm-upload-quests' 
+                    extra={asmQuestsFiles.length ? "" : "Select file to upload"}
+                >
+                    <Upload {...uploadAsmQuests}>
+                        <Button icon={<UploadOutlined />}>Upload</Button>
+                    </Upload>
+                </Form.Item>
+                <Form.Item 
+                        label="Marking Criteria" 
+                        className='asm-upload-mc' 
+                        extra={asmMCFiles.length ? "" : "Select file to upload"}
+                    >
+                        <Upload {...uploadAsmMC}>
+                            <Button icon={<UploadOutlined />}>Upload</Button>
+                        </Upload>
+                    </Form.Item>
             </Form>
-            {error && <div style={{ color: 'red', marginTop: '-20px', marginBottom: '-20px' }}>{error}</div>}
+            {error && <div className="errorMessage">{error}</div>}
         </Modal>
 
         {/*previous page return*/}

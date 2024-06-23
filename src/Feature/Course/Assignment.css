@@ -1,4 +1,16 @@
 /*------------------------------------ASSIGNMENT DISPLAY--------------------------------*/
+.manage-page-state {
+    margin-left:30px;
+    display: flex;
+    margin-bottom:-30px;
+}
+
+.returnpage-icon{
+    margin-right: 10px;
+    margin-top: 10px;
+    font-weight: bold;
+    cursor:pointer;
+}
 
 .assignments-container {
     margin: 0 10px 10px; /* top and bottom margins are 0, right and left margins are 10px */
@@ -102,6 +114,7 @@
 
 /*------------------------------------MODAL ASSIGNMENT CREATE--------------------------------*/
 .custom-modal-assignment {
+    margin-top:-50px;
     border-radius: 6px ; 
     border-top: 5px solid #840707;
 }
@@ -128,33 +141,68 @@
 
 
 /*assignment file upload*/
+
+.asmfileupload{
+    margin-bottom: 10px;
+}
 .asmfileupload .ant-form-item-label > label {
     font-weight: bold; 
     font-size: 14px;
     color: #000000;
 }
-
 .asmfileupload .ant-form-item-extra {
-    margin-top: 10px;
+    margin-top: 5px;
     font-size: 14px;
     color: #686666;
 }
 
+.instruction-ams{
+    margin-bottom: 2px;
+    margin-right: 6px;
+    text-align: justify;
+    font-style: italic;
+    color:#0d3161;
+}
+
+.asm-upload-quests{
+    margin-bottom: 5px;
+}
+.asm-upload-quests .ant-form-item-label > label {
+    font-weight: bold; 
+    font-size: 14px;
+    color: #000000;
+}
+.asm-upload-quests .ant-form-item-extra {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #686666;
+}
+
+.asm-upload-mc{
+    margin-bottom: 15px;
+}
+.asm-upload-mc .ant-form-item-label > label {
+    font-weight: bold; 
+    font-size: 14px;
+    color: #000000;
+}
+
+.asm-upload-mc .ant-form-item-extra {
+    margin-top:5px;
+    margin-bottom: -15px;
+    font-size: 14px;
+    color: #686666;
+}
+
+.errorMessage {
+    margin-top: 10px;
+    color:#ff0000;
+    position: relative;
+    left: 0; 
+}
+
 /*Confirm create asm*/
 .custom-ok-button {
-    margin-top: -20px;
     background-color: #840707; 
     border-color: #000000;
-}
-
-.returnpage-icon{
-    margin-right: 10px;
-    margin-top: 20px;
-    font-weight: bold;
-    cursor:pointer;
-}
-
-.manage-page-state {
-    margin-left:30px;
-    display: flex;
 }
