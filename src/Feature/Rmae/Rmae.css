@@ -100,6 +100,10 @@
     font-size: 10px;
 }
 
+.view-asm-icon{
+    cursor: pointer;
+}
+
 /* -----------Ask users to input the Privacy Protection info----------------- */
 .custom-modal-eva-progress {
     border-radius: 6px ; 

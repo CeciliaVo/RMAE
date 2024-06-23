@@ -3,7 +3,9 @@ import {Divider, Row, Col, Tooltip, Modal, Checkbox, Input, Button, Steps, Selec
 import { InfoCircleOutlined, CloseOutlined, SyncOutlined} from '@ant-design/icons';
 import { FaGooglePlay } from "react-icons/fa";
 import { BsPersonLock } from "react-icons/bs";
-import { IoTimerSharp } from "react-icons/io5";
+import { IoTimerSharp} from "react-icons/io5";
+import { MdLockPerson } from "react-icons/md";
+import { GiTwirlyFlower } from "react-icons/gi";
 import { LuArrowLeftFromLine } from "react-icons/lu";
 import ReturnPrePage from '../Course/ReturnPage';
 import ProgressBar from 'react-bootstrap/ProgressBar';
@@ -185,6 +187,9 @@ const Rmae = () => {
                                 <p className="progress-announcement">The system is removing the sensitive data from the student works.</p>
                             )}
                         </Col>
+                        <Col span={2}><MdLockPerson className="view-asm-icon" size = {22} /></Col> {/* If the user on the checking sensitive data step, changge to this icon */}
+                        {/* <Col span={2}><GiTwirlyFlower className="view-asm-icon" size = {22} /></Col>  */}
+                        {/* If the user on the evaluation step, changge to this icon */}
                     </Row>
                 </div>
             ))}
