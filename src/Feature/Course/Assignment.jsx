@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { FloatButton, Button, Input, Divider, Modal, Row, Col, Form, Checkbox, Upload} from 'antd';
+import React, { useEffect, useState } from 'react';
+import { FloatButton, Button, Input, Divider, Modal, Row, Col, Form, Checkbox, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { BiAddToQueue } from "react-icons/bi";
 import { FaTrashCan } from "react-icons/fa6";
@@ -7,7 +7,10 @@ import { IoDocumentTextSharp } from "react-icons/io5";
 import { LuArrowLeftFromLine } from "react-icons/lu";
 //import { BsCheckCircleFill } from "react-icons/bs"; 
 import './Assignment.css';
-import ReturnPrePage from './Feature/Course/ReturnPage';
+import ReturnPrePage from './ReturnPage';
+import { useParams } from 'react-router-dom';
+import { AssignmentEndpoint } from '../../constants/endpoints';
+import request from '../../utils/request';
 
 function getOrdinalSuffix(date) {
     let day = date.getDate();
@@ -24,6 +27,7 @@ function getOrdinalSuffix(date) {
 }
 
 const Assignment = () => {
+    const { courseID } = useParams()
     const [isOpen, setOpen] = useState(false);
     const [isAllChecked, setIsAllChecked] = useState(false);
 
@@ -34,7 +38,7 @@ const Assignment = () => {
     const [asmMCFiles, setAsmMCFiles] = useState([]);
     const [asmQuestsFiles, setAsmQuestsFiles] = useState([]);
     const [error, setError] = useState('');
-    
+
     //Display the assignment
     const [assignments, setAssignments] = useState([]);
     const assignmentExists = assignments.some(assignment => assignment.name === assignmentName);
@@ -112,7 +116,7 @@ const Assignment = () => {
         },
         fileList: asmQuestsFiles,
     };
-    
+
     //Assignment manage state
     const selectAssignment = index => {
         setAssignments(assignments.map((assignment, i) => i === index ? { ...assignment, checked: !assignment.checked } : assignment));
@@ -121,12 +125,22 @@ const Assignment = () => {
     const selectAllAssignment = (assignmentdel) => {
         setIsAllChecked(assignmentdel.target.checked);
         setAssignments(assignments.map(assignment => ({ ...assignment, checked: assignmentdel.target.checked })));
-    }; 
-    
+    };
+
     const assignmentDelete = () => {
         setAssignments(assignments.filter(assignment => !assignment.checked));
     };
 
+    const fetchAssignmentInfo = async () => {
+        const endpoint = AssignmentEndpoint["searchByCourseID"];
+        const resp = await request.get(`${endpoint}/${courseID}`);
+        console.log(resp)
+    };
+
+    useEffect(() => {
+        fetchAssignmentInfo()
+    }, [])
+    
     return (
         <>
         <FloatButton className = "creatAssignment-icon" icon={<BiAddToQueue />} onClick={asmCreateForm} style={{position: 'fixed', bottom: '20px', right: '20px',}}>
@@ -171,47 +185,47 @@ const Assignment = () => {
             {error && <div className="errorMessage">{error}</div>}
         </Modal>
 
-        {/*previous page return*/}
-        <div className='manage-page-state'>
-            <LuArrowLeftFromLine className='returnpage-icon' size={25} onClick={ReturnPrePage} />
-        </div>
+            {/*previous page return*/}
+            <div className='manage-page-state'>
+                <LuArrowLeftFromLine className='returnpage-icon' size={25} onClick={ReturnPrePage} />
+            </div>
 
-        {/*Manage assignment*/}
-        <div className="breadcrumbassignment">
-            {assignments.some(assignment => assignment.checked) && <FaTrashCan className='deleteassignmenticon' size='18px' onClick={assignmentDelete} />}
-            <Checkbox className='checkallassignment'checked={isAllChecked} onChange={selectAllAssignment}>Select all</Checkbox>
-        </div>
-        
-        {/*Course info*/}
-        <div>
-            <Divider className = "asm-cname" orientation = 'centre' > Capstone Engineering Project Part A </Divider> {/*name*/}
-            <p className = 'asm-csem-year'>Sem A 2024</p> {/*sem and year*/}
-        </div>
+            {/*Manage assignment*/}
+            <div className="breadcrumbassignment">
+                {assignments.some(assignment => assignment.checked) && <FaTrashCan className='deleteassignmenticon' size='18px' onClick={assignmentDelete} />}
+                <Checkbox className='checkallassignment' checked={isAllChecked} onChange={selectAllAssignment}>Select all</Checkbox>
+            </div>
 
-        {/*Manage assignment*/}
-        {/* <div className="breadcrumbassignment">
+            {/*Course info*/}
+            <div>
+                <Divider className="asm-cname" orientation='centre' > Capstone Engineering Project Part A </Divider> {/*name*/}
+                <p className='asm-csem-year'>Sem A 2024</p> {/*sem and year*/}
+            </div>
+
+            {/*Manage assignment*/}
+            {/* <div className="breadcrumbassignment">
             {assignments.some(assignment => assignment.checked) && <FaTrashCan className='deleteassignmenticon' size='18px' onClick={assignmentDelete} />}
             <Checkbox className='checkallassignment'checked={isAllChecked} onChange={selectAllAssignment}>Select all</Checkbox>
         </div> */}
 
-        <div className="assignments-container">
-            {/* Assignment information title */}
-            <Row className="assignment-info">
-                <Col span={1}><b></b></Col>
-                <Col span={8}><div className="assignment-label"><b>NAME</b></div></Col>
-                <Col span={4}><div className="assignment-label"><b>DATE</b></div></Col>
-                <Col span={5}><div className="assignment-label"><b>WORK SUBMISSON</b></div></Col>
-                <Col span={4}><div className="assignment-label"><b>EVA STATUS</b></div></Col>
-            </Row>
-            <Divider orientation = 'left' > </Divider>
-            {assignments.sort((a, b) => a.date - b.date).map((assignment, index, arr) => (
-                <>
-                    {(index === 0 || assignment.date !== arr[index - 1].date)}
-                    <AssignmentDisplay key={index} assignment={assignment} onCheckboxChange={() => selectAssignment(index)} />
-                </>
-            ))}
-        </div>
-    </>
+            <div className="assignments-container">
+                {/* Assignment information title */}
+                <Row className="assignment-info">
+                    <Col span={1}><b></b></Col>
+                    <Col span={8}><div className="assignment-label"><b>NAME</b></div></Col>
+                    <Col span={4}><div className="assignment-label"><b>DATE</b></div></Col>
+                    <Col span={5}><div className="assignment-label"><b>WORK SUBMISSON</b></div></Col>
+                    <Col span={4}><div className="assignment-label"><b>EVA STATUS</b></div></Col>
+                </Row>
+                <Divider orientation='left' > </Divider>
+                {assignments.sort((a, b) => a.date - b.date).map((assignment, index, arr) => (
+                    <>
+                        {(index === 0 || assignment.date !== arr[index - 1].date)}
+                        <AssignmentDisplay key={index} assignment={assignment} onCheckboxChange={() => selectAssignment(index)} />
+                    </>
+                ))}
+            </div>
+        </>
     );
 };
 
@@ -232,12 +246,12 @@ const AssignmentDisplay = ({ assignment, onCheckboxChange }) => {
                 <Col span={8} className="assignment-name">{assignment.name}</Col>
                 <Col span={4} className="assignment-date">{getOrdinalSuffix(assignment.date)}</Col>
                 <Col span={5} className="assignment-files">{truncateFileName(assignment.files[0]?.name)}</Col>
-                
+
                 <Col span={4} className={`assignment-status ${assignment.checked ? 'textwhite-onchecked' : ''} ${assignment.evaluationStatus === 'Done' ? 'assignment-status-done' : 'assignment-status-undone'}`}>
                     {assignment.evaluationStatus === 'Done' ? <BsCheckCircleFill /> : assignment.evaluationStatus}
                 </Col> {/*Evaluation change when the assignmengt done marking - Function evaluate add later*/}
-                
-                <Col span={2}><IoDocumentTextSharp className="view-asm-icon" size = {22} /></Col>
+
+                <Col span={2}><IoDocumentTextSharp className="view-asm-icon" size={22} /></Col>
             </Row>
         </div>
     );
