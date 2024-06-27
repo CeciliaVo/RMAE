@@ -1,0 +1,296 @@
+/* HEADER---------------------------------------- */
+.manage-page-state {
+    margin-left:30px;
+    display: flex;
+}
+
+.returnpage-icon{
+    margin-right: 10px;
+    margin-top: 10px;
+    font-weight: bold;
+    cursor:pointer;
+}
+
+.eva-progress .ant-steps-item-title {
+    font-size: 15px;
+    font-weight:bold;
+}
+
+.search-box {
+    margin-top:25px;
+    margin-right: 30px;
+    margin-bottom: 10px;
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.search-box-component{
+    text-align: left;
+    border: 2px solid #f1be05;
+    border-radius: 5px;
+} 
+
+.pre-student{
+    font-size:20px;
+    margin-left: 10px;
+    margin-top: 3px;
+    padding-top: 1px;
+    color:#840707;
+    background-color: #f1be05;
+    border: 2px solid #0d3161;
+}
+
+.next-student{
+    font-size:20px;
+    margin-left: 5px; 
+    margin-top: 3px;
+    padding-top: 1px;
+    color:#840707;
+    background-color: #f1be05;
+    border: 2px solid #0d3161;
+}
+
+.dvider-line{
+    margin-top: -10px;
+    margin-left: 10px; 
+    font-size: 35px;
+    color:#840707;
+    font-weight: bolder;
+}
+
+.save-all-mark-student{
+    height: 30px;
+    margin-left: 10px; 
+    padding-top: 1px;
+    font-size:14px;
+    color:#0d3161;
+    font-weight: bold;
+    background-color: #f1be05;
+    border: 2px solid #0d3161;
+}
+
+.icon-save-all{
+    color:#7d0b0b;
+    font-size: 18px;
+}
+
+.auto-eva-progress{
+    padding-top: 2px;
+    margin-left: 10px;
+    font-size: 25px;
+    color:#7d0b0b;
+    cursor:pointer;
+}
+
+.pp-container {
+    min-height: 50vh;
+    margin: -30px 10px 10px;
+    padding: 20px 20px 20px 0px;
+    background-color: #dedede75;
+    border-radius: 8px;
+}
+
+/* Feedback css */
+
+.Student-Work-Header {
+    justify-content: space-between;
+    display:flex;
+    margin-left: 20px;
+    border-radius: 8px 8px 0 0;
+    color:#ffffff; 
+    background-color: #0d3161;
+    box-shadow: 5px 0 #cbc9c98b;
+    border: 2px solid #a00909; 
+}
+
+.question-marks {
+    margin-top: 5px;
+    padding: 0 1px 8px 20px;
+    font-size:16px;
+}
+
+.question-manage{
+    margin-right: 30px;
+    padding-bottom: 5px;
+    margin-top: -10px;
+    cursor:pointer;
+    display:flex;
+    align-items: center;
+}
+
+.question-manage .ant-btn-primary:disabled {
+    color:#0d3161;
+    background-color: #0d3161; 
+    border: 2px solid #0d3161;
+}
+
+.pre-question{
+    font-size:20px;
+    margin-left: 10px;
+    margin-top: 3px;
+    padding-top: 1px;
+    color:#ffffff;
+    background-color: #0d3161;
+}
+
+.cur-question{
+    margin-left: 5px;
+    padding-top: 1px;
+}
+
+.next-question{
+    font-size:20px;
+    margin-left: 5px; 
+    margin-top: 3px;
+    padding-top: 1px;
+    color:#ffffff;
+    background-color: #0d3161;
+}
+
+.student-work-display{
+    min-height: 75vh;
+    max-height: 100px;
+    margin-top: -10px;
+    margin-left: 20px;
+    border-radius: 0 0 8px 8px;
+    background-color: #ffffff;
+    box-shadow: 5px 8px #cbc9c98b;
+    border: 2px solid #a00909; 
+    overflow: auto;
+}
+
+.Feedback-Header{
+    display:flex;
+    justify-content: space-between;
+    font-weight: bold;
+    margin-left: 10px;
+    border-radius: 8px 8px 0 0;
+    color:#ffffff; 
+    background-color: #0d3161;
+    box-shadow: 5px 0 #cbc9c98b;
+    border: 2px solid #a00909; 
+    padding-bottom: 5px;
+    padding-left:20px;
+}
+
+.feedback{
+    margin-top:10px;
+    margin-bottom: 8px;
+}
+
+.feedback-fix{
+    font-size: 18px;
+    margin-top:10px;
+    margin-bottom: 8px;
+    margin-right: 15px;
+    cursor:pointer;
+}
+
+.feedback-fix-disabled {
+    font-size: 18px;
+    margin-top:10px;
+    margin-bottom: 8px;
+    margin-right: 15px;
+    opacity: 0.5;
+    color:#0d3161;
+}
+
+.question-feedbacks{
+    height:100%;
+    margin-left: 10px;
+    border-radius: 0 0 8px 8px;
+    background-color: #ffffff;
+    box-shadow: 5px 8px #cbc9c98b;
+    border-left: 2px solid #a00909;
+    border-right: 2px solid #a00909; 
+    border-bottom: 2px solid #a00909; 
+    display:flex;
+    overflow-y: auto;
+}
+
+.Re-AE{
+    height: 48%;
+    max-width: 100%;
+    color:#000000; 
+    background-color: #ebeaea;
+    font-style:italic;
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0 0 10px;
+}
+
+.Re-AE-Header{
+    color:#000000; 
+    background-color: #ebeaea;
+    font-style:italic;
+    display: flex;
+}
+
+.re-AE-note{
+    margin-right: 80px;
+    padding-left: 20px;
+    width: 100%;
+}
+
+.re-Ae-fix{
+    font-size: 18px;
+    margin: 20px 20px 0 0;
+    cursor:pointer;
+}
+
+.re-AE-instruction{
+    border-radius: 0 0 8px 8px;
+    background-color: #ffffff;
+    text-align: justify;
+}
+
+/* ----------------------------------------------- */
+.manage-bar-re-AE{
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+    height: 98.5%;
+    width: 90%;
+    border-radius:5px;
+    border: 2px solid #0d3161;
+    background-color: #91a1b4;
+    box-shadow: 3px 0 #d4d3d361;
+    align-items: center;
+    padding-top: 5px;
+}
+
+.manage-AE{
+    margin: 2px;
+    margin-bottom: 8px;
+    border: 2px solid #0d3161;
+    background-color: #f1be05;
+    color: #a00909;
+    font-size: 20px;
+}
+
+.re-AE{
+    padding-top:5px;
+    height:100%;
+    display: flex;
+    flex-direction: column;
+    margin-top:5px;
+    width: 90%;
+    border: 2px solid #0d3161;
+    background-color: #2c4e7b;
+    border-radius:5px;
+}
+
+.custom-modal {
+    border-radius: 6px ; 
+    border-top: 5px solid #840707;
+}
+
+.custom-modal .ant-modal-content {
+    padding: 20px;
+}
+
+.custom-ok-button {
+    background-color: #840707; 
+    border-color: #000000;
+}

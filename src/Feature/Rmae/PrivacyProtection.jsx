@@ -198,10 +198,6 @@ const PrivacyProtection = () => {
                                 icon: <BsPersonLock />,
                                 title: 'Privacy Protection',
                             },
-                            {
-                                icon: <IoTimerSharp />,
-                                title: 'Auto-evaluation',
-                            },
                         ]}
                     />
                 </Divider>
