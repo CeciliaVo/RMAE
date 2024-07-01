@@ -214,19 +214,20 @@ const AutoEvaluation = () => {
     Modal.confirm({
       title: 'Are you satisfied with the result from the evaluation?',
       content: (
-        <div>
+        <div style={{ marginLeft: '-25px', marginRight: '15px', textAlign: 'justify' }}>
           <p>If you don’t have any modifications on the feedback, the result will go to the final database.</p>
           <Checkbox
             onChange={(e) => {
               const isChecked = e.target.checked;
               setNeverAskAgainChecked(isChecked);
+              localStorage.setItem('neverAskAgain', isChecked ? 'true' : 'false'); // Save to localStorage
             }}
           >
             Never ask me again
           </Checkbox>
         </div>
       ),
-      className: 'custom-modal', 
+      className: 'custom-modal',
       okButtonProps: { className: 'custom-ok-button' },
       onOk() {
         if (neverAskAgainChecked) {
@@ -235,7 +236,14 @@ const AutoEvaluation = () => {
         saveMarkCurStu();
       },
     });
-  }, [neverAskAgainChecked, saveMarkCurStu]);
+  }, [neverAskAgainChecked, saveMarkCurStu]);  
+
+  useEffect(() => {
+    const storedNeverAskAgain = localStorage.getItem('neverAskAgain');
+    if (storedNeverAskAgain === 'true') {
+      setNeverAskAgainChecked(true);
+    }
+  }, []);  
   
   const onSaveMarkCur = useCallback(() => {
     const neverAskAgain = localStorage.getItem('neverAskAgain') === 'true';
@@ -246,19 +254,18 @@ const AutoEvaluation = () => {
     }
   }, [saveMarkCurStu, confirmSaveMarkCurStu]);
   
-  
   const saveAllMarkStu = () => {
     Modal.confirm({
       title: 'Confirm Save All Evaluations',
       content: (
-        <div>
+        <div style={{marginLeft: '-25px',marginRight: '15px', textAlign: 'justify'}}>
           <p>If you don’t have any modifications on the feedbacks, all the evaluation work will go directly to the final database.</p>
         </div>
       ),
       className: 'custom-modal', 
       okButtonProps: { className: 'custom-ok-button' },
       onOk() {
-        // Functionality to remove all students and save to the database
+        // Remove all students and save to the database
         const updatedData = {
           "Student Name": [],
           "Student ID": [],
@@ -279,6 +286,30 @@ const AutoEvaluation = () => {
     });
   }
   
+  const reEvaluation = useCallback(() => {
+    if (reAeInstructions.trim().split(/\s+/).length >= 30) {
+      message.success('Re-evaluation request has been submitted.');
+      saveReAeInstructions();
+      setReAeEnabled(false);
+    } else {
+      Modal.warning({
+        title: 'Incomplete Re-evaluation Instruction',
+        content: (
+          <div style={{marginLeft: '-25px',marginRight: '15px', textAlign: 'justify'}}>
+            <p>Please input a clear command for the re-evaluation this student work based on these recommendations:</p>
+            <ul>
+              <li>Point out what you are not happy about the result of the auto-evaluation</li>
+              <li>Make clear what specific standard or requirement you want that Re-evaluation to focus on.</li>
+            </ul>
+            <p>Please input a clear command for the re-evaluation this student work based on these recommendations:</p>
+          </div>
+        ),
+        className: 'custom-modal', 
+        okButtonProps: { className: 'custom-ok-button' },
+      });
+    }
+  }, [reAeInstructions, saveReAeInstructions]);
+
   return (
     <>
       {/*previous page return*/}
@@ -464,8 +495,9 @@ const AutoEvaluation = () => {
                   <Button
                     className='manage-AE'
                     type="primary"
-                    icon={<FaGooglePlay/>}
-                    style = {{marginLeft: '7px'}}
+                    icon={<FaGooglePlay />}
+                    style={{ marginLeft: '7px' }}
+                    onClick={reEvaluation}
                   >
                   </Button>
                   <Button
