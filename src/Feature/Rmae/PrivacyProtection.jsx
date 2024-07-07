@@ -215,7 +215,7 @@ const PrivacyProtection = () => {
     };
     
     return (
-        database && <>
+        database && modifiedStudentWork && sensitiveDataRemoved && <>
             {/*previous page return*/}
             <div className='manage-page-state'>
                 <LuArrowLeftFromLine className='returnpage-icon' size={25} onClick={ReturnPrePage} />

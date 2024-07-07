@@ -8,7 +8,8 @@ import { PiOpenAiLogo} from "react-icons/pi";
 import { IoTimerSharp, IoCheckmarkDoneSharp, IoClose } from "react-icons/io5";
 import { GiReturnArrow } from "react-icons/gi";
 import './AutoEvaluation.css';
-import ReturnPrePage from './Feature/Course/ReturnPage';
+// import ReturnPrePage from './Feature/Course/ReturnPage';
+import ReturnPrePage from '../Course/ReturnPage';
 
 const { Option } = Select;
 
