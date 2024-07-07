@@ -211,11 +211,11 @@ const Assignment = () => {
             <div className="assignments-container">
                 {/* Assignment information title */}
                 <Row className="assignment-info">
-                    <Col span={1}><b></b></Col>
-                    <Col span={8}><div className="assignment-label"><b>NAME</b></div></Col>
-                    <Col span={4}><div className="assignment-label"><b>DATE</b></div></Col>
-                    <Col span={5}><div className="assignment-label"><b>WORK SUBMISSON</b></div></Col>
-                    <Col span={4}><div className="assignment-label"><b>EVA STATUS</b></div></Col>
+                    <Col span={1}></Col>
+                    <Col span={8} className="assignment-label">NAME</Col>
+                    <Col span={4} className="assignment-label">DATE</Col>
+                    <Col span={5} className="assignment-label">WORK SUBMISSON</Col>
+                    <Col span={4} className="assignment-label">EVA STATUS</Col>
                 </Row>
                 <Divider orientation='left' > </Divider>
                 {assignments.sort((a, b) => a.date - b.date).map((assignment, index, arr) => (

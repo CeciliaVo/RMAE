@@ -145,11 +145,11 @@ const Rmae = () => {
         <div className="assignments-container">
             {/* Assignment information title */}
             <Row className="assignment-info">
-                <Col span={3}><div className="asm-label-rmae"><b>Assignment ID</b></div></Col>
-                <Col span={8}><div className="asm-label-rmae"><b>Assignment Name</b></div></Col>
-                <Col span={1}></Col>
-                <Col span={2}></Col>
-                <Col span={8}><div className="asm-label-rmae"><b>Progress</b></div></Col>
+                <Col span={3} className="asm-label-rmae">Assignment ID</Col>
+                <Col span={8} className="asm-label-rmae">Assignment Name</Col>
+                <Col span={1} className="asm-label-rmae"></Col>
+                <Col span={2} className="asm-label-rmae"></Col>
+                <Col span={8} className="asm-label-rmae">Progress</Col>
             </Row>
 
             <Divider  className='divi-rmae'/>
