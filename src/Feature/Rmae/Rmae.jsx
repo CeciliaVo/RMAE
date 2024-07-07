@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {Divider, Row, Col, Tooltip, Modal, Checkbox, Input, Button, Steps, Select} from 'antd';
 import { InfoCircleOutlined, CloseOutlined, SyncOutlined} from '@ant-design/icons';
 import { FaGooglePlay } from "react-icons/fa";
@@ -9,43 +9,53 @@ import { GiTwirlyFlower } from "react-icons/gi";
 import { LuArrowLeftFromLine } from "react-icons/lu";
 import ReturnPrePage from '../Course/ReturnPage';
 import ProgressBar from 'react-bootstrap/ProgressBar';
+import { AssignmentEndpoint, PrivacyEndpoint } from '../../constants/endpoints';
+import request from '../../utils/request';
+import { useNavigate } from 'react-router-dom';
 
 import './Rmae.css';
 
 const Rmae = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const navigate = useNavigate();
     const [selectedData, setSelectedData] = useState([]);
     const [options, setOptions] = useState(["Student name", "Course ID", "Course Name", "Student ID", "Student Age", "Gender"]);
     const [newOption, setNewOption] = useState("");
     const [currentAssignment, setCurrentAssignment] = useState(null); //Keep track on the current assignment the user is interact with
     const [recentAssignments, setRecentAssignments] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
+    // {
+    //     "id": 1,
+    //     "name": "Asm1",
+    //     "course_id": 1,
+    //     "marking_criteria_filepath": "Asm1/criteria.txt",
+    //     "questions_filepath": "Asm1/q1.txt",
+    //     "student_answer_filepath": "Asm1/demo.zip",
+    //     "number_of_questions": 3,
+    //     "number_of_submissions": 0,
+    //     "instruction": null,
+    //     "created_at": "2024-06-23T04:57:40.212892",
+    //     "evaluation_status": false,
+    //     "lecture_check_status": false,
+    //     "sensitive_rmv_status": false
+    // },
+    const [assignments, setAssignments] = useState([]);
 
     const handleSearchChange = (value) => {
         setSearchTerm(value);
     };
+
+    const fetchAllAssignment = async () => {
+        const endpoint = AssignmentEndpoint["searchAll"];
+        const resp = await request.get(endpoint);
+        console.log(resp)
+        setAssignments(resp);
+      };
     
-    const [assignments, setAssignments] = useState([
-        { 
-            id: "OENG1183_1A_2024",
-            name: "Capstone EP Sem A", 
-            courseName: "OENG1183",
-            date: "08/06/2024",
-            submissionType: "Folder",
-            numberOfFiles: "177",
-            fileType: "python",
-            privacyProtectionState: 'start', 
-            autoEvaState: 'wait', 
-            progressPercentage: 0 
-        },
-        { 
-            id: "OENG1183_2B_2024",
-            name: "Capstone EP Sem B", 
-            privacyProtectionState: 'start', 
-            autoEvaState: 'wait', 
-            progressPercentage: 0 
-        }
-    ]);
+      useEffect(() => {
+        fetchAllAssignment();
+      },[]);
+
 
     const modalAskInputUser = (assignmentId) => {
         setIsModalOpen(true);
@@ -58,17 +68,22 @@ const Rmae = () => {
     };
     
 
-    const confirmSensiData = () => {
+    const confirmSensiData = async () => {
         setIsModalOpen(false);
         setSelectedData([]); 
         setNewOption(""); 
-        setAssignments(prevAssignments =>
-            prevAssignments.map(assignment =>
-                assignment.id === currentAssignment
-                    ? { ...assignment, privacyProtectionState: 'process' }
-                    : assignment
-            )
-        );
+
+        const endpoint = PrivacyEndpoint["privacyProtection"];
+        const resp = await request.post(`${endpoint}/${currentAssignment}`);
+        console.log(resp)
+
+        // setAssignments(prevAssignments =>
+        //     prevAssignments.map(assignment =>
+        //         assignment.id === currentAssignment
+        //             ? { ...assignment, privacyProtectionState: 'process' }
+        //             : assignment
+        //     )
+        // );
     };
 
     const privacyProtectionFunc = (assignmentId) => {
@@ -162,18 +177,18 @@ const Rmae = () => {
                         <Col span={1}>
                             <Tooltip title={
                                 <>
-                                    <span className="tooltip-label">Course Name:</span> <span className="tooltip-value">{`${assignment.courseName}`}</span><br />
-                                    <span className="tooltip-label">Date:</span> <span className="tooltip-value">{`${assignment.date}`}</span><br />
-                                    <span className="tooltip-label">Submission Type:</span> <span className="tooltip-value">{`${assignment.submissionType}`}</span><br />
-                                    <span className="tooltip-label">Number of Files:</span> <span className="tooltip-value">{`${assignment.numberOfFiles}`}</span><br />
-                                    <span className="tooltip-label">File Type:</span> <span className="tooltip-value">{`${assignment.fileType}`}</span>
+                                    <span className="tooltip-label">Course Name:</span> <span className="tooltip-value">{`${assignment?.name}`}</span><br />
+                                    <span className="tooltip-label">Date:</span> <span className="tooltip-value">{`${assignment?.created_at}`}</span><br />
+                                    {/* <span className="tooltip-label">Submission Type:</span> <span className="tooltip-value">{`${assignment.submissionType}`}</span><br /> */}
+                                    <span className="tooltip-label">Number of Files:</span> <span className="tooltip-value">{`${assignment?.number_of_submissions}`}</span><br />
+                                    {/* <span className="tooltip-label">File Type:</span> <span className="tooltip-value">{`${assignment.fileType}`}</span> */}
                                 </>
                             }>
                                 <InfoCircleOutlined className="view-asm-detail-icon" /> {/* Hover to show the assignmemt detai for marking */}
                             </Tooltip>
                         </Col>
                         <Col span={2}>
-                            {assignment.privacyProtectionState === 'start' ? (
+                            {!assignment.sensitive_rmv_status ? (
                                 <FaGooglePlay className="start-eva-icon" size={18} onClick={() => modalAskInputUser(assignment.id)} />
                             ) : (
                                 <SyncOutlined spin className="process-eva-icon" size={18} />
@@ -182,12 +197,12 @@ const Rmae = () => {
 
                         {/* Progress bar system */}
                         <Col span={8}>
-                            <ProgressBar now={assignment.progressPercentage} label={`${assignment.progressPercentage}%`} visuallyHidden />
-                            {assignment.privacyProtectionState === 'process' && (
+                            <ProgressBar now={assignment?.progressPercentage || Math.floor(Math.random() * 100) + 1} label={`${assignment?.progressPercentage || Math.floor(Math.random() * 100) + 1}%`} visuallyHidden />
+                            {assignment.sensitive_rmv_status && (
                                 <p className="progress-announcement">The system is removing the sensitive data from the student works.</p>
                             )}
                         </Col>
-                        <Col span={2}><MdLockPerson className="view-asm-icon" size = {22} /></Col> {/* If the user on the checking sensitive data step, changge to this icon */}
+                        <Col span={2}><MdLockPerson className="view-asm-icon" size = {22} onClick={() => navigate(`/privacy/${assignment.id}`)}/></Col> {/* If the user on the checking sensitive data step, changge to this icon */}
                         {/* <Col span={2}><GiTwirlyFlower className="view-asm-icon" size = {22} /></Col>  */}
                         {/* If the user on the evaluation step, changge to this icon */}
                     </Row>
@@ -196,7 +211,7 @@ const Rmae = () => {
 
         </div>
 
-        <Modal className="custom-modal-eva-progress" title="Evaluation Progress" open={isModalOpen} onCancel={cancelSensiData} onOk={() => confirmSensiData(currentAssignment)} width={650} okButtonProps={{ className: 'custom-ok-button', disabled: selectedData.length === 0 }}>
+        <Modal className="custom-modal-eva-progress" title="Evaluation Progress" open={isModalOpen} onCancel={cancelSensiData} onOk={() => confirmSensiData(currentAssignment)} width={650} okButtonProps={{ className: 'custom-ok-button'}}>
             <Steps
                 className = "eva-progress"
                 current={0}

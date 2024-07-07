@@ -8,5 +8,15 @@ export const SchoolEndpoint = {
 }
 
 export const AssignmentEndpoint = {
-    'searchByCourseID': "assignment/search_by_course"
+    'add': "assignment/add",
+    'searchByCourseID': "assignment/search_by_course",
+    'searchAll': "assignment/search"
+}
+
+export const StudentAnswerEndpoint = {
+    'getByAssignment': "auto/privacy-protection/format",
+}
+
+export const PrivacyEndpoint = {
+    'privacyProtection': "auto/privacy-protection",
 }
