@@ -1,0 +1,67 @@
+/* HEADER---------------------------------------- */
+.manage-page-state {
+    margin-left:30px;
+    display: flex;
+}
+
+.returnpage-icon{
+    margin-right: 10px;
+    margin-top: 10px;
+    font-weight: bold;
+    cursor:pointer;
+}
+
+.search-box {
+    margin-top:25px;
+    margin-right: 30px;
+    margin-bottom: 10px;
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.search-box-component{
+    text-align: left;
+    border: 2px solid #f1be05;
+    border-radius: 5px;
+} 
+
+.dvider-line{
+    margin-top: -10px;
+    margin-left: 10px; 
+    font-size: 35px;
+    color:#840707;
+    font-weight: bolder;
+}
+
+.pp-container {
+    min-height: 50vh;
+    margin: 10px 10px 10px;
+    padding: 20px 20px 20px 20px;
+    background-color: #dedede75;
+    border-radius: 8px;
+}
+
+.Asm-info{
+    font-weight: bold;
+    color: #840707;
+    margin-top: 5px;
+    
+}
+
+.ant-table-title {
+    height: 60px;  
+}
+
+.student-result-label{
+    white-space: nowrap;
+    font-size: 14px;
+    font-weight: bold;
+    color: #0d3161;
+}
+
+.student-id{
+    font-weight: bold;
+    font-size: 13.5px;
+    color: #840707;
+}

@@ -5,8 +5,8 @@
     background-color: #a91d1d !important;
     height: 100vh;
     border: 2px solid #a91d1d;
-  }
-  
+    margin-top: -20px;
+}
 
 .ant-layout-sider {
     background-color: #ffffff !important;
@@ -118,4 +118,15 @@
     font-size: 15px;
     margin-left: 2px;
     cursor: pointer;
+}
+
+/* UNEXPECTED CSS */
+
+:where(.css-dev-only-do-not-override-3rel02).ant-layout .ant-layout-sider-children {
+    height: 110%;
+     margin-top: -10px;
+}
+
+:where(.css-dev-only-do-not-override-3rel02).ant-layout .ant-layout-sider-trigger {
+    position: absolute;
 }
