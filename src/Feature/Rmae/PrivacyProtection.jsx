@@ -8,7 +8,10 @@ import { FaGooglePlay } from "react-icons/fa";
 import { BsPersonLock } from "react-icons/bs";
 import { IoTimerSharp } from "react-icons/io5";
 import './PrivacyProtection.css';
-import ReturnPrePage from './Feature/Course/ReturnPage';
+import { StudentAnswerEndpoint } from '../../constants/endpoints';
+import ReturnPrePage from '../Course/ReturnPage';
+import request from '../../utils/request';
+import { useParams } from "react-router-dom";
 
 function highlightSensitiveDataRemoved(text) {
     const regex = /(\d+\.\[REMOVED\])/g;
@@ -21,7 +24,8 @@ function highlightSensitiveDataRemoved(text) {
 }
 
 const PrivacyProtection = () => {
-    const database = [
+
+    const raw = [
         {
             "File Name": ["1YLHi86m_469298_q1.c", "2ABCDm_123456_q2.c", "2ABCDm_123456_q3.c"],
             "Student Work": [
@@ -75,24 +79,52 @@ const PrivacyProtection = () => {
     const defaultFileIndex = 0; // Set the default file index for selecting file
     const [selectedFileIndex, setSelectedFileIndex] = useState(defaultFileIndex);
     const [checkedList, setCheckedList] = useState([]);
-    const [sensitiveDataRemoved, setSensitiveDataRemoved] = useState(database[0]["Sensitive Data Removed"][selectedFileIndex]);
-    const [modifiedStudentWork, setModifiedStudentWork] = useState(database[0]["Student Work"][defaultFileIndex]);
+    // const [database, setDatabase] = useState([])
+    // const [sensitiveDataRemoved, setSensitiveDataRemoved] = useState(null);
+    // const [modifiedStudentWork, setModifiedStudentWork] = useState(null);
+    const[database, setDatabase] = useState(null)
+    const [sensitiveDataRemoved, setSensitiveDataRemoved] = useState(null);
+    const [modifiedStudentWork, setModifiedStudentWork] = useState(null);
     const [transferredData, setTransferredData] = useState([]);
     const [currentFileIndex, setCurrentFileIndex] = useState(1);
-    const [isFileSaved, setIsFileSaved] = useState(database[0]["File Name"].map(() => false)); // Track save state for each file
+    const [isFileSaved, setIsFileSaved] = useState(null); // Track save state for each file
     const [isAllSaved, setIsAllSaved] = useState(false); // Track if all files are saved
     //asm marking criteria and questions:
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [instruction, setInstruction] = useState('');
+    const { assignmentID } = useParams();
+
+    const [sensitiveDataItems, setSensitiveDataItems] = useState([])
+
+
+    
+    const fetchPrivacyInfo = async () => {
+        const endpoint = StudentAnswerEndpoint["getByAssignment"];
+        const resp = await request.get(`${endpoint}/${assignmentID}`);
+        console.log(resp)
+        setDatabase(resp)
+        setSensitiveDataRemoved(resp["Sensitive Data Removed"][selectedFileIndex])
+        setModifiedStudentWork(resp["Student Work"][defaultFileIndex])
+        setIsFileSaved(resp["File Name"].map(() => false))
+    };
 
     useEffect(() => {
-        setModifiedStudentWork(database[0]["Student Work"][selectedFileIndex]);
+        setSensitiveDataItems(sensitiveDataRemoved)
+    }, [sensitiveDataRemoved])
+    
+    useEffect(() => {
+        fetchPrivacyInfo()
+    }, [assignmentID])
+    
+    useEffect(() => {
+        if(!database) return
+        setModifiedStudentWork(database["Student Work"][selectedFileIndex]);
         setCheckedList([]);
-        setSensitiveDataRemoved(database[0]["Sensitive Data Removed"][selectedFileIndex]);
-    }, [selectedFileIndex]);
+        setSensitiveDataRemoved(database["Sensitive Data Removed"][selectedFileIndex]);
+    }, [database, selectedFileIndex]);
     
     const selectStudentWork = (value) => {
-        const selectedIndex = database[0]["File Name"].indexOf(value);
+        const selectedIndex = database["File Name"].indexOf(value);
         setSelectedFileIndex(selectedIndex);
         setCurrentFileIndex(selectedIndex + 1); 
     };    
@@ -100,20 +132,20 @@ const PrivacyProtection = () => {
     const goToPreviousFile = () => {
         if (currentFileIndex > 1) {
             const newFileIndex = currentFileIndex - 2; // Subtract 2 because array indices are 0-based
-            selectStudentWork(database[0]["File Name"][newFileIndex]);
+            selectStudentWork(database["File Name"][newFileIndex]);
         }
     };
     
     const goToNextFile = () => {
-        if (currentFileIndex < database[0]["File Name"].length) {
+        if (currentFileIndex < database["File Name"].length) {
             const newFileIndex = currentFileIndex; // No need to add 1 because array indices are 0-based
-            selectStudentWork(database[0]["File Name"][newFileIndex]);
+            selectStudentWork(database["File Name"][newFileIndex]);
         }
     };
     
     
-    const sensitiveDataItems = sensitiveDataRemoved.split('\n').filter(item => item.trim() !== '');
-    const checkAll = sensitiveDataItems.length === checkedList.length;
+    // const sensitiveDataItems = sensitiveDataRemoved.split('\n').filter(item => item.trim() !== '');
+    const checkAll = sensitiveDataItems && sensitiveDataItems.length === checkedList.length;
     const indeterminate = checkedList.length > 0 && checkedList.length < sensitiveDataItems.length;
 
     const onChange = (item) => {
@@ -128,7 +160,7 @@ const PrivacyProtection = () => {
     };
 
     const transferCheckedWords = () => {
-        let newStudentWork = database[0]["Student Work"][selectedFileIndex];
+        let newStudentWork = database["Student Work"][selectedFileIndex];
         checkedList.forEach(item => {
             const id = parseInt(item.split('.')[0]);
             const word = item.split('.')[1];
@@ -144,7 +176,7 @@ const PrivacyProtection = () => {
         if (window.confirm("Once you save, you cannot modify the current file anymore. Are you sure you want to save?")) {
             const updatedSensitiveData = sensitiveDataItems.filter(item => !transferredData.includes(item)).join('\n');
             setSensitiveDataRemoved(updatedSensitiveData);
-            database[0]["Sensitive Data Removed"][selectedFileIndex] = updatedSensitiveData; // update the sensitive data
+            database["Sensitive Data Removed"][selectedFileIndex] = updatedSensitiveData; // update the sensitive data
             setTransferredData([]); // clear the transferred data after saving
             setCheckedList([]); // clear the checked list after saving
             setIsFileSaved(prevState => {
@@ -158,7 +190,7 @@ const PrivacyProtection = () => {
     const saveAllFiles = () => {
         if (window.confirm("Once you save all files, you cannot modify them anymore. Are you sure you want to save all?")) {
             setIsAllSaved(true); // Disable transfer buttons for all files
-            setIsFileSaved(database[0]["File Name"].map(() => true)); // Set all files as saved
+            setIsFileSaved(database["File Name"].map(() => true)); // Set all files as saved
         }
     };
 
@@ -183,7 +215,7 @@ const PrivacyProtection = () => {
     };
     
     return (
-        <>
+        database && <>
             {/*previous page return*/}
             <div className='manage-page-state'>
                 <LuArrowLeftFromLine className='returnpage-icon' size={25} onClick={ReturnPrePage} />
@@ -210,12 +242,12 @@ const PrivacyProtection = () => {
                     placeholder="Search to Select"
                     optionFilterProp="children"
                     onChange={(value) => selectStudentWork(value)}
-                    defaultValue={database[0]["File Name"][defaultFileIndex]} 
+                    defaultValue={database["File Name"][defaultFileIndex]} 
                     filterOption={(input, option) =>
                         option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                     }
                 >
-                    {database[0]["File Name"].map((fileName, index) => (
+                    {database["File Name"].map((fileName, index) => (
                         <Option key={index} value={fileName}>
                             {fileName}
                         </Option>
@@ -229,14 +261,14 @@ const PrivacyProtection = () => {
                     onClick={goToPreviousFile} 
                     disabled={currentFileIndex === 1}
                 />
-                <p className='cur-file'>{currentFileIndex}/{database[0]["File Name"].length}</p>
+                <p className='cur-file'>{currentFileIndex}/{database["File Name"].length}</p>
                 <Button 
                     type="primary" 
                     icon={<FaCaretRight />} 
                     className='next-file' 
                     size="small" 
                     onClick={goToNextFile} 
-                    disabled={currentFileIndex === database[0]["File Name"].length}
+                    disabled={currentFileIndex === database["File Name"].length}
                 />
                 <p className ='dvider-line'>|</p>
                 <Button 
@@ -260,7 +292,7 @@ const PrivacyProtection = () => {
                 <Row>
                     <Col span={6}>
                         <div className='Sensitive-Data-Removed-Header'>
-                            <p className='count-removed-data'>{sensitiveDataItems.length} items</p>
+                            <p className='count-removed-data'>{sensitiveDataItems && sensitiveDataItems.length} items</p>
                             <Row className='label-sdr'>
                                 <Col span={3}><Checkbox indeterminate={indeterminate} onChange={checkAllSensiData} checked={checkAll} /></Col>
                                 <Col span={2}><div className="label-sdr-1"><b>ID</b></div></Col>
@@ -268,7 +300,7 @@ const PrivacyProtection = () => {
                             </Row>
                         </div>
                         <div className='sensitive-data-removed'>
-                            {sensitiveDataItems.map((item, index) => {
+                            {sensitiveDataItems && sensitiveDataItems.map((item, index) => {
                                 const id = item.split('.')[0];
                                 const data = item.split('.')[1];
                                 return (
