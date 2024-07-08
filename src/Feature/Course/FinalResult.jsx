@@ -1,25 +1,25 @@
 import React, { useState, useRef } from 'react';
-import { Button, Input, Space, Table, Slider, Divider, Col, InputNumber, Row } from 'antd';
+import { Button, Input, Space, Table, Slider, Divider } from 'antd';
 import { SearchOutlined, CloseOutlined, FilterOutlined } from '@ant-design/icons';
 import { LuArrowLeftFromLine } from "react-icons/lu";
 import Highlighter from 'react-highlight-words';
 import './FinalResult.css';
-import ReturnPrePage from './ReturnPage';
+import ReturnPrePage from './Feature/Course/ReturnPage';
 
 const FinalResult = () => {
     const studentFinalResult = [
         {
             "Assignment Question": [3],
-            "Student Name": ["A", "A", "A", "A", "A", "A", 'Bsa', 'Bsa', 'Bsa'],
             "Student ID": ["s3911365", "s3911365", "s3911365", "s123", "s123", "s123", "s345", "s345", "s345"],
             "Question ID": ["1", "2", "3", "1", "2", "3", '1', "2", "3"],
             "Question Score": ["8/8", "7.5/8", "5/8", "7/8", "6/8", "8/8", "0/8", "7/8", "1/8"],
             "Question Feedbacks": [
-`- The code follows the requirements and produces the correct results for all inputs tested.
+                `- The code follows the requirements and produces the correct results for all inputs tested.
 - The program efficiently performs the required tasks.`,
                 `- The variable names (num1, num2, num3) `,
                 `- The variable names (num1, num2, num3) `,
-                `- The code follows the requirements and produces the correct results for all inputs tested.\n- The program efficiently performs the required tasks.`,
+                `- The code follows the requirements and produces the correct results for all inputs tested.
+- The program efficiently performs the required tasks.`,
                 `- The variable names (num1, num2, num3) `,
                 `- The variable names (num1, num2, num3) `,
                 `- The student does not done this work`,
@@ -35,41 +35,32 @@ const FinalResult = () => {
     const [filteredInfo, setFilteredInfo] = useState({});
     const searchInput = useRef(null);
 
-    const getMaxScoresFromDatabase = () => {
-        const maxScores = {};
-        studentFinalResult.forEach(item => {
-            item['Question Score'].forEach((score, index) => {
-                const questionId = item['Question ID'][index];
-                const [actualScore, maxScore] = score.split('/').map(Number);
-                maxScores[questionId] = Math.max(maxScores[questionId] || 0, maxScore);
-            });
-        });
-        return maxScores;
-    };
-    
+    const studentScores = studentFinalResult[0]['Question Score'].map(score => score.split('/').map(Number));
+    const actualScores = studentScores.map(score => score[0]);
+    const maxScores = studentScores.map(score => score[1]);
 
-    // Calculate total score
     const studentTotalScore = {};
-        studentFinalResult.forEach(item => {
-            item['Question Score'].forEach((score, index) => {
-                const [actualScore, maxScore] = score.split('/').map(Number);
-                const studentId = item['Student ID'][index];
-                if (!studentTotalScore[studentId]) {
-                    studentTotalScore[studentId] = {
-                        name: item['Student Name'][index],
-                        id: studentId,
-                        totalScore: 0,
-                        maxScore: 0,
-                        questionFeedbacks: Array(item['Assignment Question'][0]).fill(''),
-                        questionScores: Array(item['Assignment Question'][0]).fill(''),
-                    };
-                }
-                studentTotalScore[studentId].totalScore += actualScore;
-                studentTotalScore[studentId].maxScore += maxScore;
-                studentTotalScore[studentId].questionFeedbacks[parseInt(item['Question ID'][index]) - 1] = item['Question Feedbacks'][index];
-                studentTotalScore[studentId].questionScores[parseInt(item['Question ID'][index]) - 1] = score;
-            });
+    studentFinalResult.forEach(item => {
+        item['Student ID'].forEach((studentId, index) => {
+            if (!studentTotalScore[studentId]) {
+                studentTotalScore[studentId] = {
+                    id: studentId,
+                    totalScore: 0,
+                    maxScore: 0,
+                    questionFeedbacks: Array(item['Assignment Question'][0]).fill(''),
+                    questionScores: Array(item['Assignment Question'][0]).fill(''),
+                    questionActualScores: Array(item['Assignment Question'][0]).fill(0),
+                    questionMaxScores: Array(item['Assignment Question'][0]).fill(0),
+                };
+            }
+            studentTotalScore[studentId].totalScore += actualScores[index];
+            studentTotalScore[studentId].maxScore += maxScores[index];
+            studentTotalScore[studentId].questionFeedbacks[parseInt(item['Question ID'][index]) - 1] = item['Question Feedbacks'][index];
+            studentTotalScore[studentId].questionScores[parseInt(item['Question ID'][index]) - 1] = item['Question Score'][index];
+            studentTotalScore[studentId].questionActualScores[parseInt(item['Question ID'][index]) - 1] += actualScores[index];
+            studentTotalScore[studentId].questionMaxScores[parseInt(item['Question ID'][index]) - 1] += maxScores[index];
         });
+    });
 
     // Convert the studentTotalScore object to an array for the Table component
     const tableData = Object.values(studentTotalScore).map(student => ({
@@ -118,7 +109,7 @@ const FinalResult = () => {
                     </Button>
                     <Button
                         onClick={() => resetSearchID(clearFilters, confirm)}
-                        icon={<CloseOutlined style={{ size: '13px', color: '#840707' }}/>}
+                        icon={<CloseOutlined style={{ size: '13px', color: '#840707' }} />}
                         size="small"
                         style={{ width: 20 }}
                     />
@@ -145,12 +136,20 @@ const FinalResult = () => {
             ),
     });
 
+    const filterQuestionScoreColumn = (dataIndex, i) => ({
+        sorter: {
+            compare: (a, b) => a.questionActualScores[i] - b.questionActualScores[i],
+            multiple: numQuestions - i, // Use decreasing order for multiple sorting
+        },
+        sortOrder: sortedInfo.columnKey === dataIndex && sortedInfo.order,
+    });    
+
     const filterOverallColumn = (dataIndex) => {
         const marks = {
             0: '0%',
             100: '100%'
-        }
-    
+        };
+
         return {
             filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
                 <div style={{ padding: 15 }}>
@@ -163,7 +162,7 @@ const FinalResult = () => {
                         onAfterChange={() => confirm()}
                         min={0}
                         max={100}
-                        style={{ marginBottom: 8, display: 'block', width: '200px'}}
+                        style={{ marginBottom: 8, display: 'block', width: '200px' }}
                     />
                     <Divider style={{ marginTop: '20px', marginBottom: '10px' }} />
                     <Space style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -189,148 +188,88 @@ const FinalResult = () => {
         };
     };
 
-    const expandedRowRender = (record) => {
-        // Calculate the width for each column
-        const columnWidth = 100 / studentFinalResult[0]["Assignment Question"][0];
-    
-        // Generate columns for each question
-        const columns = [];
-        for (let i = 1; i <= studentFinalResult[0]["Assignment Question"][0]; i++) {
-            columns.push({
-                title: <div style={{ textAlign: 'center', marginTop:'-20px', fontWeight: 'bold'}}>Q{i}</div>,
-                dataIndex: `Q${i}`,
-                key: `Q${i}`,
-                width: `${columnWidth}%`, // Set the width for each column
-                render: (_, record) => (
-                    <div style={{ whiteSpace: 'pre-wrap', textAlign: 'justify'}}>
-                        {record[`Q${i}`]}
-                    </div>
-                ),
-            });
-        }
-    
-        const queScoreRow = [];
-        for (let i = 1; i <= studentFinalResult[0]["Assignment Question"][0]; i++) {
-            queScoreRow.push({
-                render: (_, record) => (
-                    <div style={{ textAlign: 'center', marginTop:'-10px', marginBottom:'-10px'}}>
-                        {record[`Q${i}Score`]}
-                    </div>
-                ),
-            });
-        }
-    
-        // Generate data for each question
-        const data = [{
-            key: record.id,
-            ...record.questionFeedbacks.reduce((acc, feedback, index) => {
-                acc[`Q${index + 1}`] = feedback;
-                acc[`Q${index + 1}Score`] = record.questionScores[index];
-                return acc;
-            }, {}),
-        }];
-    
-        return (
-            <div>
-                <Table columns={columns} dataSource={data} pagination={false} />
-                <Table columns={queScoreRow} dataSource={data} pagination={false} showHeader={false} />
-            </div>
-        );
-    };
-    
-    const filterTotalScoreColumn = (dataIndex, maxScores) => {
-        return {
-            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-                <div style={{ padding: 15 }}>
-                    {Object.entries(maxScores).map(([questionId, maxScore]) => (
-                        <div key={questionId}>
-                            <b>Q{questionId}</b>
-                            <Row>
-                                <Col span={12}>
-                                    <Slider
-                                        range
-                                        min={0}
-                                        max={maxScore}
-                                        onChange={(value) => {
-                                            const newSelectedKeys = { ...selectedKeys, [questionId]: value };
-                                            setSelectedKeys(newSelectedKeys);
-                                        }}
-                                        value={selectedKeys[questionId] || [0, maxScore]}
-                                        style={{ marginBottom: 8, display: 'block', width: '150px'}}
-                                    />
-                                </Col>
-                            </Row>
-                        </div>
-                    ))}
-                    <Divider style={{ marginTop: '20px', marginBottom: '10px' }} />
-                    <Space style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <Button
-                            onClick={() => {
-                                clearFilters();
-                                confirm();
-                            }}
-                            icon={<CloseOutlined style={{ size: '13px', color: '#840707' }} />}
-                            size="small"
-                            style={{ width: 20 }}
-                        />
-                    </Space>
-                </div>
-            ),
-            filterIcon: (filtered) => <FilterOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-            onFilter: (value, record) => {
-                return Object.entries(value).every(([questionId, [min, max]]) => {
-                    const score = parseFloat(record.questionScores[parseInt(questionId) - 1].split('/')[0]);
-                    return score >= min && score <= max;
-                });
-            },
-        };
-    };
-    
-    
+    const numQuestions = studentFinalResult[0]["Assignment Question"][0];
+    const feedbackColumnWidth = numQuestions > 0 ? 80 / (numQuestions * 2) + '%' : 'auto';
+    const scoreColumnWidth = numQuestions > 0 ? 20 / (numQuestions * 2) + '%' : 'auto';
+
+
     const tableColumns = [
         {
             title: <span className='student-result-label'>Student ID</span>,
             dataIndex: 'id',
             key: 'id',
             className: 'student-id',
+            fixed: 'left',
+            width: '5%',
             ...searchIDColumn('id'),
         },
         {
-            title: <span className='student-result-label'>Student Name</span>,
-            dataIndex: 'name',
-            key: 'name',
+            title: <span className='student-result-label'>Assignment Question</span>,
+            children: Array.from({ length: numQuestions }, (_, i) => ({
+                title: `Q${i + 1} (${maxScores[i]} pts)`,
+                children: [
+                    {
+                        title: 'Feedback',
+                        dataIndex: `q${i + 1}Feedback`,
+                        key: `q${i + 1}Feedback`,
+                        width: feedbackColumnWidth,
+                        render: (text, record) => (
+                            <div>{record.questionFeedbacks[i].split('\n').map((line, index) => <span key={index}>{line}<br/></span>)}</div>
+                        ),
+                    },
+                    {
+                        title: 'Score',
+                        dataIndex: `q${i + 1}Score`,
+                        key: `q${i + 1}Score`,
+                        width: scoreColumnWidth,
+                        ...filterQuestionScoreColumn(`q${i + 1}Score`, i),
+                        render: (text, record) => (
+                            <div style={{ textAlign: 'center' }}>{record.questionActualScores[i]}</div> 
+                        ),
+                    }                    
+                ],
+            })),
         },
         {
             title: <span className='student-result-label'>Total Score</span>,
             dataIndex: 'totalScore',
             key: 'totalScore',
-            ...filterTotalScoreColumn('totalScore', getMaxScoresFromDatabase()),
-        },        
+            fixed: 'right',
+            width: '5%',
+            render: (text, record) => (
+                <div style={{ textAlign: 'center' }}>{record.totalScore}</div>
+            ),
+        },
         {
             title: <span className='student-result-label'>Overall</span>,
             dataIndex: 'overall',
             key: 'overall',
+            fixed: 'right',
+            width: '5%',
             ...filterOverallColumn('overall'),
+            render: (text, record) => (
+                <div style={{ textAlign: 'center' }}>{record.overall}</div>
+            ),
         },
     ];
 
     return (
         <>
-            {/*previous page return*/}
+            {/* Previous page return */}
             <div className='manage-page-state'>
                 <LuArrowLeftFromLine className='returnpage-icon' size={25} onClick={ReturnPrePage} />
             </div>
-            
+
             <div className='pp-container'>
-                <Table 
+                <Table
                     className="table-row"
-                    dataSource={tableData} 
-                    columns={tableColumns} 
+                    dataSource={tableData}
+                    columns={tableColumns}
                     bordered
                     title={() => <p className='Asm-info'>Assignment Name (Assignment ID)</p>}
                     pagination={false}
+                    scroll={{ x: 'max-content' }}
                     onChange={handleChange}
-                    expandable={{ expandedRowRender }}
                 />
             </div>
         </>
