@@ -4,7 +4,7 @@ import { SearchOutlined, CloseOutlined, FilterOutlined } from '@ant-design/icons
 import { LuArrowLeftFromLine } from "react-icons/lu";
 import Highlighter from 'react-highlight-words';
 import './FinalResult.css';
-import ReturnPrePage from './Feature/Course/ReturnPage';
+import ReturnPrePage from './ReturnPage';
 
 const FinalResult = () => {
     const studentFinalResult = [
