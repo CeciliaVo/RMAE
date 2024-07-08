@@ -215,19 +215,20 @@ const AutoEvaluation = () => {
     Modal.confirm({
       title: 'Are you satisfied with the result from the evaluation?',
       content: (
-        <div>
+        <div style={{ marginLeft: '-25px', marginRight: '15px', textAlign: 'justify' }}>
           <p>If you don’t have any modifications on the feedback, the result will go to the final database.</p>
           <Checkbox
             onChange={(e) => {
               const isChecked = e.target.checked;
               setNeverAskAgainChecked(isChecked);
+              localStorage.setItem('neverAskAgain', isChecked ? 'true' : 'false'); // Save to localStorage
             }}
           >
             Never ask me again
           </Checkbox>
         </div>
       ),
-      className: 'custom-modal', 
+      className: 'custom-modal',
       okButtonProps: { className: 'custom-ok-button' },
       onOk() {
         if (neverAskAgainChecked) {
@@ -236,7 +237,14 @@ const AutoEvaluation = () => {
         saveMarkCurStu();
       },
     });
-  }, [neverAskAgainChecked, saveMarkCurStu]);
+  }, [neverAskAgainChecked, saveMarkCurStu]);  
+
+  useEffect(() => {
+    const storedNeverAskAgain = localStorage.getItem('neverAskAgain');
+    if (storedNeverAskAgain === 'true') {
+      setNeverAskAgainChecked(true);
+    }
+  }, []);  
   
   const onSaveMarkCur = useCallback(() => {
     const neverAskAgain = localStorage.getItem('neverAskAgain') === 'true';
@@ -247,19 +255,18 @@ const AutoEvaluation = () => {
     }
   }, [saveMarkCurStu, confirmSaveMarkCurStu]);
   
-  
   const saveAllMarkStu = () => {
     Modal.confirm({
       title: 'Confirm Save All Evaluations',
       content: (
-        <div>
+        <div style={{marginLeft: '-25px',marginRight: '15px', textAlign: 'justify'}}>
           <p>If you don’t have any modifications on the feedbacks, all the evaluation work will go directly to the final database.</p>
         </div>
       ),
       className: 'custom-modal', 
       okButtonProps: { className: 'custom-ok-button' },
       onOk() {
-        // Functionality to remove all students and save to the database
+        // Remove all students and save to the database
         const updatedData = {
           "Student Name": [],
           "Student ID": [],
@@ -280,6 +287,30 @@ const AutoEvaluation = () => {
     });
   }
   
+  const reEvaluation = useCallback(() => {
+    if (reAeInstructions.trim().split(/\s+/).length >= 30) {
+      message.success('Re-evaluation request has been submitted.');
+      saveReAeInstructions();
+      setReAeEnabled(false);
+    } else {
+      Modal.warning({
+        title: 'Incomplete Re-evaluation Instruction',
+        content: (
+          <div style={{marginLeft: '-25px',marginRight: '15px', textAlign: 'justify'}}>
+            <p>Please input a clear command for the re-evaluation this student work based on these recommendations:</p>
+            <ul>
+              <li>Point out what you are not happy about the result of the auto-evaluation</li>
+              <li>Make clear what specific standard or requirement you want that Re-evaluation to focus on.</li>
+            </ul>
+            <p>Please input a clear command for the re-evaluation this student work based on these recommendations:</p>
+          </div>
+        ),
+        className: 'custom-modal', 
+        okButtonProps: { className: 'custom-ok-button' },
+      });
+    }
+  }, [reAeInstructions, saveReAeInstructions]);
+
   return (
     <>
       {/*previous page return*/}
@@ -287,7 +318,7 @@ const AutoEvaluation = () => {
         <LuArrowLeftFromLine className='returnpage-icon' size={25} onClick={ReturnPrePage} />
       </div>
 
-      <Divider orientation='left' style={{ marginTop: '-30px', marginBottom: '-60px', paddingLeft: '30px' }}>
+      <Divider orientation='left' style={{ marginTop: '42px', marginBottom: '-40px', paddingLeft: '30px' }}>
         <Steps
           className="eva-progress"
           current={0}
@@ -347,7 +378,7 @@ const AutoEvaluation = () => {
 
       <div className='pp-container'>
         <Row>
-          <Col span={13}>
+          <Col style ={{width:'53%'}}>
             <div className='Student-Work-Header'>
               <p className='question-marks'>
                 <b>Question {studentQuestions[currentQuestionIndex].questionId}: </b>
@@ -394,7 +425,7 @@ const AutoEvaluation = () => {
             </div>
           </Col>
 
-          <Col span={10}>
+          <Col style ={{width:'42%'}}>
             <div style={{ display: 'flex', flexDirection: 'column', height: '50%' }}>
               <div className='Feedback-Header'>
                 <p className='feedback'>Feedback on the question's solution:</p>
@@ -451,7 +482,7 @@ const AutoEvaluation = () => {
               </div>
           </Col>
 
-          <Col>
+          <Col style ={{width:'5%'}}>
             <div className='manage-bar-re-AE'>
               <Button
                 className='manage-AE'
@@ -465,8 +496,8 @@ const AutoEvaluation = () => {
                   <Button
                     className='manage-AE'
                     type="primary"
-                    icon={<FaGooglePlay/>}
-                    style = {{marginLeft: '7px'}}
+                    icon={<FaGooglePlay />}
+                    onClick={reEvaluation}
                   >
                   </Button>
                   <Button
@@ -474,7 +505,6 @@ const AutoEvaluation = () => {
                     type="primary"
                     icon={<GiReturnArrow />}
                     onClick={disableReAeInstructions}
-                    style = {{marginLeft: '7px'}}
                   >
                   </Button>
                 </div>

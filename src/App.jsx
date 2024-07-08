@@ -9,6 +9,7 @@ import Rmae from './Feature/Rmae/Rmae';
 import Assignment from './Feature/Course/Assignment';
 import PrivacyProtection from './Feature/Rmae/PrivacyProtection';
 import AutoEvaluation from './Feature/Rmae/AutoEvaluation';
+import FinalResult from './Feature/Course/FinalResult';
 const { Content } = Layout;
 
 // Main App component
@@ -30,8 +31,7 @@ const App = () => {
                         <Route path="/asm/:courseID" element={<Assignment />} />
                         <Route path="/privacy/:assignmentID" element={<PrivacyProtection />} />
                         <Route path="/evaluation" element={<AutoEvaluation />} />
-
-
+                        {/* <Route path="/finalresult" element={<FinalResult />} /> */}
                     </Routes>
                     </Content>
                 </Layout>

@@ -214,24 +214,10 @@ const Course = () => {
       <div className="courses-container">
         {/* Course information title */}
         <Row className="courseinfo">
-          <Col span={1}>
-            <b></b>
-          </Col>
-          <Col span={8}>
-            <div className="course-label">
-              <b>NAME</b>
-            </div>
-          </Col>
-          <Col span={5}>
-            <div className="course-label">
-              <b>CODE</b>
-            </div>
-          </Col>
-          <Col span={7}>
-            <div className="course-label">
-              <b>SCHOOL</b>
-            </div>
-          </Col>
+          <Col span={1}></Col>
+          <Col span={8} className="course-label">NAME</Col>
+          <Col span={5} className="course-label">CODE</Col>
+          <Col span={7} className="course-label">SCHOOL</Col>
         </Row>
 
         {courses
