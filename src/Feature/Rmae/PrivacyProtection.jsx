@@ -8,7 +8,7 @@ import { FaGooglePlay } from "react-icons/fa";
 import { BsPersonLock } from "react-icons/bs";
 import { IoTimerSharp } from "react-icons/io5";
 import './PrivacyProtection.css';
-import { StudentAnswerEndpoint } from '../../constants/endpoints';
+import { StudentAnswerEndpoint, PrivacyEndpoint } from '../../constants/endpoints';
 import ReturnPrePage from '../Course/ReturnPage';
 import request from '../../utils/request';
 import { useParams } from "react-router-dom";
@@ -25,60 +25,12 @@ function highlightSensitiveDataRemoved(text) {
 
 const PrivacyProtection = () => {
 
-    const raw = [
-        {
-            "File Name": ["1YLHi86m_469298_q1.c", "2ABCDm_123456_q2.c", "2ABCDm_123456_q3.c"],
-            "Student Work": [
-                `
-    /*  
-    1.[REMOVED] (2.[REMOVED])
-    3.[REMOVED]
-    Intro to 4.[REMOVED]
-    */
-    #include <stdio.h>
-    
-    int main() {
-        float num1, num2, num3;
-        printf("Enter three float numbers: ");
-        scanf("%f %f %f", &num1, &num2, &num3);
-    
-        printf("A number is the sum of the others: ");
-        
-        // Check all 5.[REMOVED] and print 6.[REMOVED] result
-        if (num1 + num2 == num3) {
-            printf("YES");
-        } else if (num1 + num3 == num2) {
-            printf("YES");
-        } else if (num2 + num3 == num1) {
-            printf("YES");
-        } else
-            printf("NO");
-    
-        printf("\\n");
-    
-        return 0;
-    }`,
-                "abcdef", // student work for the second file
-                "abcedefasdfsf"  // student work for the third file
-            ],
-            "Sensitive Data Removed": [
-                `
-                1.Nguyen Xuan Thanh
-                2.s3915468
-                3.RMIT University
-                4.Programming
-                5.conditions
-                6.appropriate`,
-                `....`,
-                ""
-            ]
-        }
-    ];
-
     const { Option } = Select;
     const defaultFileIndex = 0; // Set the default file index for selecting file
     const [selectedFileIndex, setSelectedFileIndex] = useState(defaultFileIndex);
     const [checkedList, setCheckedList] = useState([]);
+    const [checkedListIds, setCheckedListIds] = useState([]);
+
     // const [database, setDatabase] = useState([])
     // const [sensitiveDataRemoved, setSensitiveDataRemoved] = useState(null);
     // const [modifiedStudentWork, setModifiedStudentWork] = useState(null);
@@ -95,13 +47,11 @@ const PrivacyProtection = () => {
     const { assignmentID } = useParams();
 
     const [sensitiveDataItems, setSensitiveDataItems] = useState([])
+    const [keyCount, setKeyCount] = useState(0)
 
-
-    
     const fetchPrivacyInfo = async () => {
         const endpoint = StudentAnswerEndpoint["getByAssignment"];
         const resp = await request.get(`${endpoint}/${assignmentID}`);
-        console.log(resp)
         setDatabase(resp)
         setSensitiveDataRemoved(resp["Sensitive Data Removed"][selectedFileIndex])
         setModifiedStudentWork(resp["Student Work"][defaultFileIndex])
@@ -114,7 +64,7 @@ const PrivacyProtection = () => {
     
     useEffect(() => {
         fetchPrivacyInfo()
-    }, [assignmentID])
+    }, [assignmentID, keyCount])
     
     useEffect(() => {
         if(!database) return
@@ -127,7 +77,7 @@ const PrivacyProtection = () => {
         const selectedIndex = database["File Name"].indexOf(value);
         setSelectedFileIndex(selectedIndex);
         setCurrentFileIndex(selectedIndex + 1); 
-    };    
+    };
 
     const goToPreviousFile = () => {
         if (currentFileIndex > 1) {
@@ -148,10 +98,14 @@ const PrivacyProtection = () => {
     const checkAll = sensitiveDataItems && sensitiveDataItems.length === checkedList.length;
     const indeterminate = checkedList.length > 0 && checkedList.length < sensitiveDataItems.length;
 
-    const onChange = (item) => {
+    const onChange = (id, item) => {
         setCheckedList(checkedList.includes(item)
             ? checkedList.filter(checkedItem => checkedItem !== item)
             : [...checkedList, item]
+        );
+        setCheckedListIds(checkedListIds.includes(id)
+            ? checkedListIds.filter(checkedItem => checkedItem !== id)
+            : [...checkedListIds, id]
         );
     };
 
@@ -160,6 +114,8 @@ const PrivacyProtection = () => {
     };
 
     const transferCheckedWords = () => {
+        console.log(checkedList)
+        console.log(checkedListIds)
         let newStudentWork = database["Student Work"][selectedFileIndex];
         checkedList.forEach(item => {
             const id = parseInt(item.split('.')[0]);
@@ -169,21 +125,34 @@ const PrivacyProtection = () => {
         });
         setModifiedStudentWork(newStudentWork);
         setTransferredData([...transferredData, ...checkedList]);
-        setCheckedList([]); // Clear checked list after transfer
+        // setCheckedList([]); // Clear checked list after transfer
+        // setCheckedListIds([]);
     };
 
-    const saveTransferredData = () => {
+    const saveTransferredData = async () => {
         if (window.confirm("Once you save, you cannot modify the current file anymore. Are you sure you want to save?")) {
-            const updatedSensitiveData = sensitiveDataItems.filter(item => !transferredData.includes(item)).join('\n');
-            setSensitiveDataRemoved(updatedSensitiveData);
-            database["Sensitive Data Removed"][selectedFileIndex] = updatedSensitiveData; // update the sensitive data
-            setTransferredData([]); // clear the transferred data after saving
-            setCheckedList([]); // clear the checked list after saving
-            setIsFileSaved(prevState => {
-                const newState = [...prevState];
-                newState[selectedFileIndex] = true;
-                return newState;
-            });
+            // const updatedSensitiveData = sensitiveDataItems.filter(item => !transferredData.includes(item)).join('\n');
+            // setSensitiveDataRemoved(updatedSensitiveData);
+            // database["Sensitive Data Removed"][selectedFileIndex] = updatedSensitiveData; // update the sensitive data
+            // setTransferredData([]); // clear the transferred data after saving
+            // setCheckedList([]); // clear the checked list after saving
+            // setCheckedListIds([]);
+            // setIsFileSaved(prevState => {
+            //     const newState = [...prevState];
+            //     newState[selectedFileIndex] = true;
+            //     return newState;
+            // });
+            const endpoint = PrivacyEndpoint["privacyUpdate"];
+            const payload = {
+                "removed_word_ids": checkedListIds,
+                "modified_student_work": modifiedStudentWork
+            }
+            // await request.post(`${endpoint}`, payload);
+            setTransferredData([]);
+            setCheckedList([]);
+            setCheckedListIds([]);
+            setKeyCount(keyCount + 1)
+
         }
     };
 
@@ -276,10 +245,10 @@ const PrivacyProtection = () => {
                     icon={<LuSaveAll className='icon-save-all'/>} 
                     className='save-all' 
                     size="small" 
-                    onClick={saveAllFiles} 
+                    onClick={saveTransferredData} 
                     disabled={isAllSaved}
                 >
-                    Save all
+                    Save
                 </Button>
 
                 {isAllSaved ? 
@@ -302,11 +271,13 @@ const PrivacyProtection = () => {
                         <div className='sensitive-data-removed'>
                             {sensitiveDataItems && sensitiveDataItems.map((item, index) => {
                                 const id = item.split('.')[0];
-                                const data = item.split('.')[1];
+                                const order = item.split('.')[1];
+                                const data = item.split('.')[2];
+                                item = item.split('.').slice(1).join('.')
                                 return (
                                     <Row key={index} className='sdr'>
-                                        <Col span={3}><Checkbox checked={checkedList.includes(item)} onChange={() => onChange(item)} /></Col>
-                                        <Col span={2}>{id}</Col>
+                                        <Col span={3}><Checkbox checked={checkedList.includes(item)} onChange={() => onChange(id, item)} /></Col>
+                                        <Col span={2}>{order}</Col>
                                         <Col span={5} className="sdr-display">{data}</Col>
                                     </Row>
                                 );
@@ -329,7 +300,7 @@ const PrivacyProtection = () => {
                         <div className='Student-Work-Header'>
                             <div>
                                 <p className='student-work-info'>Asm Name (Asm ID) </p>
-                                <div className='icon-save'><LuSave className='icon-save' onClick={saveTransferredData} disabled={isFileSaved[selectedFileIndex]}/></div>
+                                {/* <div className='icon-save'><LuSave className='icon-save' onClick={saveTransferredData} disabled={isFileSaved[selectedFileIndex]}/></div> */}
                             </div>
                         </div>
                         <div className='student-work-display'>
