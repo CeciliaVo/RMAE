@@ -105,7 +105,7 @@ const Assignment = () => {
         setKeyCount(keyCount + 1);
         setOpen(false);
         setError("");
-        
+
         // // Reset the assignment name and file list
         setAssignmentName("");
         setAsmStudentWorkFiles([]);
@@ -307,7 +307,7 @@ const Assignment = () => {
           <Col span={1}>
             <b></b>
           </Col>
-          <Col span={8}>
+          <Col span={5}>
             <div className="assignment-label">
               <b>NAME</b>
             </div>
@@ -317,14 +317,24 @@ const Assignment = () => {
               <b>DATE</b>
             </div>
           </Col>
-          <Col span={5}>
+          <Col span={4}>
             <div className="assignment-label">
               <b>WORK SUBMISSON</b>
             </div>
           </Col>
-          <Col span={4}>
+          <Col span={2}>
             <div className="assignment-label">
-              <b>EVA STATUS</b>
+              <b>EVALATION</b>
+            </div>
+          </Col>
+          <Col span={2}>
+            <div className="assignment-label">
+              <b>CONFIRMED</b>
+            </div>
+          </Col>
+          <Col span={2}>
+            <div className="assignment-label">
+              <b>SENSITIVE</b>
             </div>
           </Col>
         </Row>
@@ -366,19 +376,19 @@ const AssignmentDisplay = ({ assignment, onCheckboxChange }) => {
             onChange={onCheckboxChange}
           />
         </Col>
-        <Col span={8} className="assignment-name">
+        <Col span={5} className="assignment-name">
           {assignment.name}
         </Col>
         <Col span={4} className="assignment-date">
           {getOrdinalSuffix(assignment?.created_at)}
         </Col>
-        <Col span={5} className="assignment-files">
+        <Col span={4} className="assignment-files">
           {assignment?.student_answer_filepath}
         </Col>
         <Col
-          span={4}
+          span={2}
           className={`assignment-status ${
-            assignment.checked ? "textwhite-onchecked" : ""
+            assignment.evaluation_status ? "textwhite-onchecked" : ""
           } ${
             assignment?.evaluation_status
               ? "assignment-status-done"
@@ -386,6 +396,38 @@ const AssignmentDisplay = ({ assignment, onCheckboxChange }) => {
           }`}
         >
           {assignment?.evaluation_status ? (
+            <BsCheckCircleFill style={{ color: "green" }} />
+          ) : (
+            <MinusCircleOutlined style={{ color: "red" }} />
+          )}
+        </Col>{" "}
+        <Col
+          span={2}
+          className={`assignment-status ${
+            assignment.lecture_check_status ? "textwhite-onchecked" : ""
+          } ${
+            assignment?.lecture_check_status
+              ? "assignment-status-done"
+              : "assignment-status-undone"
+          }`}
+        >
+          {assignment?.lecture_check_status ? (
+            <BsCheckCircleFill style={{ color: "green" }} />
+          ) : (
+            <MinusCircleOutlined style={{ color: "red" }} />
+          )}
+        </Col>{" "}
+        <Col
+          span={2}
+          className={`assignment-status ${
+            assignment.sensitive_rmv_status ? "textwhite-onchecked" : ""
+          } ${
+            assignment?.sensitive_rmv_status
+              ? "assignment-status-done"
+              : "assignment-status-undone"
+          }`}
+        >
+          {assignment?.sensitive_rmv_status ? (
             <BsCheckCircleFill style={{ color: "green" }} />
           ) : (
             <MinusCircleOutlined style={{ color: "red" }} />
