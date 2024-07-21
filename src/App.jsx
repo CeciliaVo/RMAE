@@ -31,7 +31,7 @@ const App = () => {
                         <Route path="/asm/:courseID" element={<Assignment />} />
                         <Route path="/privacy/:assignmentID" element={<PrivacyProtection />} />
                         <Route path="/evaluation" element={<AutoEvaluation />} />
-                        {/* <Route path="/finalresult" element={<FinalResult />} /> */}
+                        <Route path="/finalresult/:assignmentID" element={<FinalResult />} />
                     </Routes>
                     </Content>
                 </Layout>

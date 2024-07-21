@@ -1,13 +1,16 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button, Input, Space, Table, Slider, Divider, Col, InputNumber, Row } from 'antd';
 import { SearchOutlined, CloseOutlined, FilterOutlined } from '@ant-design/icons';
 import { LuArrowLeftFromLine } from "react-icons/lu";
 import Highlighter from 'react-highlight-words';
 import './FinalResult.css';
 import ReturnPrePage from './ReturnPage';
+import request from '../../utils/request';
+import { ResultEndpoint } from '../../constants/endpoints';
+import { useParams } from "react-router-dom";
 
 const FinalResult = () => {
-    const studentFinalResult = [
+    const raw = [
         {
             "Assignment Question": [3],
             "Student Name": ["A", "A", "A", "A", "A", "A", 'Bsa', 'Bsa', 'Bsa'],
@@ -34,10 +37,51 @@ const FinalResult = () => {
     const [sortedInfo, setSortedInfo] = useState({});
     const [filteredInfo, setFilteredInfo] = useState({});
     const searchInput = useRef(null);
+    const { assignmentID } = useParams();
+    const [keyCount, setKeyCount] = useState(0)
+    // Calculate total score
+    const [studentTotalScore, setStudentTotalScore] = useState({});
+    const [studentFinalResult, setStudentFinalResult] = useState([])
+
+    console.log(studentTotalScore)
+    const fetchResults = async () => {
+        const endpoint = ResultEndpoint["getResult"];
+        const resp = await request.get(`${endpoint}/${assignmentID}`);
+        console.log(resp)
+        let tempTotalScore = {}
+        resp.forEach(item => {
+            console.log(item)
+            item['Question Score'].forEach((score, index) => {
+                const [actualScore, maxScore] = score.split('/').map(Number);
+                const studentId = item['Student ID'][index];
+                if (!tempTotalScore[studentId]) {
+                    tempTotalScore[studentId] = {
+                        name: item['Student Name'][index],
+                        id: studentId,
+                        totalScore: 0,
+                        maxScore: 0,
+                        questionFeedbacks: Array(item['Assignment Question'][0]).fill(''),
+                        questionScores: Array(item['Assignment Question'][0]).fill(''),
+                    };
+                }
+                tempTotalScore[studentId].totalScore += actualScore;
+                tempTotalScore[studentId].maxScore += maxScore;
+                tempTotalScore[studentId].questionFeedbacks[parseInt(item['Question ID'][index].replace(/\D/g, ''), 10) - 1 || 0] = item['Question Feedbacks'][index];
+                tempTotalScore[studentId].questionScores[parseInt(item['Question ID'][index]) - 1] = score;
+            });
+        });
+        setStudentTotalScore(tempTotalScore)
+        setStudentFinalResult(resp)
+        setKeyCount(keyCount + 1)
+    };
+
+    useEffect(() => {
+        fetchResults();
+      }, [assignmentID])
 
     const getMaxScoresFromDatabase = () => {
         const maxScores = {};
-        studentFinalResult.forEach(item => {
+        studentFinalResult.length && studentFinalResult.forEach(item => {
             item['Question Score'].forEach((score, index) => {
                 const questionId = item['Question ID'][index];
                 const [actualScore, maxScore] = score.split('/').map(Number);
@@ -48,28 +92,8 @@ const FinalResult = () => {
     };
     
 
-    // Calculate total score
-    const studentTotalScore = {};
-        studentFinalResult.forEach(item => {
-            item['Question Score'].forEach((score, index) => {
-                const [actualScore, maxScore] = score.split('/').map(Number);
-                const studentId = item['Student ID'][index];
-                if (!studentTotalScore[studentId]) {
-                    studentTotalScore[studentId] = {
-                        name: item['Student Name'][index],
-                        id: studentId,
-                        totalScore: 0,
-                        maxScore: 0,
-                        questionFeedbacks: Array(item['Assignment Question'][0]).fill(''),
-                        questionScores: Array(item['Assignment Question'][0]).fill(''),
-                    };
-                }
-                studentTotalScore[studentId].totalScore += actualScore;
-                studentTotalScore[studentId].maxScore += maxScore;
-                studentTotalScore[studentId].questionFeedbacks[parseInt(item['Question ID'][index]) - 1] = item['Question Feedbacks'][index];
-                studentTotalScore[studentId].questionScores[parseInt(item['Question ID'][index]) - 1] = score;
-            });
-        });
+    
+    
 
     // Convert the studentTotalScore object to an array for the Table component
     const tableData = Object.values(studentTotalScore).map(student => ({
@@ -315,7 +339,7 @@ const FinalResult = () => {
     ];
 
     return (
-        <>
+            <>
             {/*previous page return*/}
             <div className='manage-page-state'>
                 <LuArrowLeftFromLine className='returnpage-icon' size={25} onClick={ReturnPrePage} />
@@ -323,6 +347,7 @@ const FinalResult = () => {
             
             <div className='pp-container'>
                 <Table 
+                    key={keyCount}
                     className="table-row"
                     dataSource={tableData} 
                     columns={tableColumns} 
