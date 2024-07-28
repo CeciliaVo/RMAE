@@ -42,6 +42,10 @@ const FinalResult = () => {
     // Calculate total score
     const [studentTotalScore, setStudentTotalScore] = useState({});
     const [studentFinalResult, setStudentFinalResult] = useState([])
+    const [numQuestions, setNumQuestions] = useState(null);
+    const [feedbackColumnWidth, setFeedbackColumnWidth] = useState('auto');
+    const [scoreColumnWidth, setScoreColumnWidth] = useState('auto')
+    const [maxScores, setMaxScores] = useState({})
 
     console.log(studentTotalScore)
     const fetchResults = async () => {
@@ -72,16 +76,28 @@ const FinalResult = () => {
         });
         setStudentTotalScore(tempTotalScore)
         setStudentFinalResult(resp)
+        const tmpNumQuestions = resp[0]["Assignment Question"][0];
+        setNumQuestions(tmpNumQuestions);
+        setFeedbackColumnWidth(tmpNumQuestions > 0 ? 80 / (tmpNumQuestions * 2) + '%' : 'auto');
+        setScoreColumnWidth(tmpNumQuestions > 0 ? 20 / (tmpNumQuestions * 2) + '%' : 'auto');
+        setMaxScores(getMaxScoresFromDatabase(resp))
         setKeyCount(keyCount + 1)
     };
+
+    // useEffect(() => {
+    //     const tmpNumQuestions = studentFinalResult[0]["Assignment Question"][0];
+    //     setNumQuestions(tmpNumQuestions);
+    //     setFeedbackColumnWidth(tmpNumQuestions > 0 ? 80 / (tmpNumQuestions * 2) + '%' : 'auto');
+    //     setScoreColumnWidth(tmpNumQuestions > 0 ? 20 / (tmpNumQuestions * 2) + '%' : 'auto');
+    // }, [studentFinalResult])
 
     useEffect(() => {
         fetchResults();
       }, [assignmentID])
 
-    const getMaxScoresFromDatabase = () => {
+    const getMaxScoresFromDatabase = (results) => {
         const maxScores = {};
-        studentFinalResult.length && studentFinalResult.forEach(item => {
+        results.length && results.forEach(item => {
             item['Question Score'].forEach((score, index) => {
                 const questionId = item['Question ID'][index];
                 const [actualScore, maxScore] = score.split('/').map(Number);
@@ -101,6 +117,9 @@ const FinalResult = () => {
         ...student,
         overall: ((student.totalScore / student.maxScore) * 100).toFixed(2) + '%',
     }));
+
+    console.log(tableData)
+    console.log(studentTotalScore)
 
     const handleChange = (pagination, filters, sorter) => {
         setFilteredInfo(filters);
@@ -221,10 +240,6 @@ const FinalResult = () => {
         };
     };
 
-    const numQuestions = studentFinalResult[0]["Assignment Question"][0];
-    const feedbackColumnWidth = numQuestions > 0 ? 80 / (numQuestions * 2) + '%' : 'auto';
-    const scoreColumnWidth = numQuestions > 0 ? 20 / (numQuestions * 2) + '%' : 'auto';
-
 
     const tableColumns = [
         {
@@ -247,7 +262,7 @@ const FinalResult = () => {
                         key: `q${i + 1}Feedback`,
                         width: feedbackColumnWidth,
                         render: (text, record) => (
-                            <div>{record.questionFeedbacks[i].split('\n').map((line, index) => <span key={index}>{line}<br/></span>)}</div>
+                            record.questionFeedbacks[i] !== null && <div>{record.questionFeedbacks[i].split('\n').map((line, index) => <span key={index}>{line}<br/></span>)}</div>
                         ),
                     },
                     {
@@ -257,7 +272,7 @@ const FinalResult = () => {
                         width: scoreColumnWidth,
                         ...filterQuestionScoreColumn(`q${i + 1}Score`, i),
                         render: (text, record) => (
-                            <div style={{ textAlign: 'center' }}>{record.questionActualScores[i]}</div> 
+                            <div style={{ textAlign: 'center' }}>{record.questionActualScores && record.questionActualScores[i]}</div> 
                         ),
                     }                    
                 ],
