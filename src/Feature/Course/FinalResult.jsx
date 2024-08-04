@@ -71,9 +71,10 @@ const FinalResult = () => {
                 tempTotalScore[studentId].totalScore += actualScore;
                 tempTotalScore[studentId].maxScore += maxScore;
                 tempTotalScore[studentId].questionFeedbacks[parseInt(item['Question ID'][index].replace(/\D/g, ''), 10) - 1 || 0] = item['Question Feedbacks'][index];
-                tempTotalScore[studentId].questionScores[parseInt(item['Question ID'][index]) - 1] = score;
+                tempTotalScore[studentId].questionScores[parseInt(item['Question ID'][index].replace(/\D/g, ''), 10) - 1 || 0] = score;
             });
         });
+        console.log(tempTotalScore)
         setStudentTotalScore(tempTotalScore)
         setStudentFinalResult(resp)
         const tmpNumQuestions = resp[0]["Assignment Question"][0];
@@ -254,7 +255,7 @@ const FinalResult = () => {
         {
             title: <span className='student-result-label'>Assignment Question</span>,
             children: Array.from({ length: numQuestions }, (_, i) => ({
-                title: `Q${i + 1} (${maxScores[i]} pts)`,
+                title: `Q${i + 1}`,
                 children: [
                     {
                         title: 'Feedback',
@@ -272,7 +273,7 @@ const FinalResult = () => {
                         width: scoreColumnWidth,
                         ...filterQuestionScoreColumn(`q${i + 1}Score`, i),
                         render: (text, record) => (
-                            <div style={{ textAlign: 'center' }}>{record.questionActualScores && record.questionActualScores[i]}</div> 
+                            <div style={{ textAlign: 'center' }}>{record.questionScores && record.questionScores[i]}</div> 
                         ),
                     }                    
                 ],
