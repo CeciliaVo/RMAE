@@ -22,6 +22,10 @@ export const PrivacyEndpoint = {
     'privacyUpdate': 'auto/privacy/update'
 }
 
+export const EvaEndpoint = {
+    'autoEva': "auto/auto-grader",
+}
+
 export const ResultEndpoint = {
     'getResult': "auto/result",
 }

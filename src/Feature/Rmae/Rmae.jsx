@@ -9,14 +9,17 @@ import { GiTwirlyFlower } from "react-icons/gi";
 import { LuArrowLeftFromLine } from "react-icons/lu";
 import ReturnPrePage from '../Course/ReturnPage';
 import ProgressBar from 'react-bootstrap/ProgressBar';
-import { AssignmentEndpoint, PrivacyEndpoint } from '../../constants/endpoints';
+import { AssignmentEndpoint, PrivacyEndpoint, EvaEndpoint } from '../../constants/endpoints';
 import request from '../../utils/request';
 import { useNavigate } from 'react-router-dom';
+import { displaySuccessMessage } from '../../utils/request';
 
 import './Rmae.css';
 
 const Rmae = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalEvaOpen, setIsModalEvaOpen] = useState(false);
+
     const navigate = useNavigate();
     const [selectedData, setSelectedData] = useState([]);
     const [options, setOptions] = useState(["Student name", "Course ID", "Course Name", "Student ID", "Student Age", "Gender"]);
@@ -24,6 +27,7 @@ const Rmae = () => {
     const [currentAssignment, setCurrentAssignment] = useState(null); //Keep track on the current assignment the user is interact with
     const [recentAssignments, setRecentAssignments] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
+
     // {
     //     "id": 1,
     //     "name": "Asm1",
@@ -56,6 +60,15 @@ const Rmae = () => {
         fetchAllAssignment();
       },[]);
 
+    const modalEva= (assignmentId) => {
+        setIsModalEvaOpen(true);
+        setCurrentAssignment(assignmentId);
+        setRecentAssignments(prevRecentAssignments => {
+            const updatedRecentAssignments = [assignmentId, ...prevRecentAssignments];
+            // Keep only the 3 most recent assignments
+            return updatedRecentAssignments.slice(0, 3);
+        });
+    };
 
     const modalAskInputUser = (assignmentId) => {
         setIsModalOpen(true);
@@ -75,15 +88,19 @@ const Rmae = () => {
 
         const endpoint = PrivacyEndpoint["privacyProtection"];
         const resp = await request.post(`${endpoint}/${currentAssignment}`);
+        displaySuccessMessage("Running Privacy Protection Process");
         console.log(resp)
+    };
 
-        // setAssignments(prevAssignments =>
-        //     prevAssignments.map(assignment =>
-        //         assignment.id === currentAssignment
-        //             ? { ...assignment, privacyProtectionState: 'process' }
-        //             : assignment
-        //     )
-        // );
+    const confirmAutoEva = async () => {
+        setIsModalEvaOpen(false);
+        setSelectedData([]); 
+        setNewOption(""); 
+
+        const endpoint = EvaEndpoint["autoEva"];
+        const resp = await request.post(`${endpoint}/${currentAssignment}`);
+        displaySuccessMessage("Running Auto Evaluation Process");
+        console.log(resp)
     };
 
     const privacyProtectionFunc = (assignmentId) => {
@@ -102,6 +119,7 @@ const Rmae = () => {
 
     const cancelSensiData = () => {
         setIsModalOpen(false);
+        setIsModalEvaOpen(false)
         setSelectedData([]); 
         setNewOption(""); 
     };
@@ -188,19 +206,20 @@ const Rmae = () => {
                             </Tooltip>
                         </Col>
                         <Col span={2}>
-                            {!assignment.sensitive_rmv_status ? (
-                                <FaGooglePlay className="start-eva-icon" size={18} onClick={() => modalAskInputUser(assignment.id)} />
+                            {assignment.sensitive_rmv_status ? (
+                                <FaGooglePlay className="start-eva-icon" size={18} onClick={() => modalEva(assignment.id)} />
                             ) : (
-                                <SyncOutlined spin className="process-eva-icon" size={18} />
+                                <FaGooglePlay className="start-eva-icon" size={18} onClick={() => modalAskInputUser(assignment.id)} />
                             )}
+                            {/* <FaGooglePlay className="start-eva-icon" size={18} onClick={() => modalAskInputUser(assignment.id)} /> */}
                         </Col>
 
                         {/* Progress bar system */}
                         <Col span={8}>
                             <ProgressBar now={assignment?.progressPercentage || Math.floor(Math.random() * 100) + 1} label={`${assignment?.progressPercentage || Math.floor(Math.random() * 100) + 1}%`} visuallyHidden />
-                            {assignment.sensitive_rmv_status && (
-                                <p className="progress-announcement">The system is removing the sensitive data from the student works.</p>
-                            )}
+                            {!assignment.sensitive_rmv_status ? (
+                                <p className="progress-announcement">Need removing sensitive data from the student works.</p>
+                            ) : assignment.evaluation_status ? <p className="progress-announcement">Auto Evaluation completed</p> : <p className="progress-announcement">Remove sensitive information completed</p>}
                         </Col>
                         <Col span={2}><MdLockPerson className="view-asm-icon" size = {22} onClick={() => navigate(`/privacy/${assignment.id}`)}/></Col> {/* If the user on the checking sensitive data step, changge to this icon */}
                         {/* <Col span={2}><GiTwirlyFlower className="view-asm-icon" size = {22} /></Col>  */}
@@ -244,6 +263,24 @@ const Rmae = () => {
                 <Input className="input-new-op"  value={newOption} onChange={inputNewOpt} />
                 <Button className="add-sensidata-button" onClick={allowAddNewOption} disabled={newOption.length < 3}>Add</Button>
             </div>
+        </Modal>
+
+        <Modal className="custom-modal-eva-progress" title="Evaluation Progress" open={isModalEvaOpen} onCancel={cancelSensiData} onOk={() => confirmAutoEva(currentAssignment)} width={650} okButtonProps={{ className: 'custom-ok-button'}}>
+            <Steps
+                className = "eva-progress"
+                current={1}
+                items={[
+                    {
+                        icon: <BsPersonLock />,
+                        title: 'Privacy Protection',
+                    },
+                    {
+                        icon: <IoTimerSharp />,
+                        title: 'Auto-evaluation',
+                    },
+                ]}
+            />
+            <p>Click OK for running Auto Evaluation Process</p>
         </Modal>
 
     </>

@@ -312,12 +312,12 @@ const Assignment = () => {
               <b>NAME</b>
             </div>
           </Col>
-          <Col span={4}>
+          <Col span={3}>
             <div className="assignment-label">
               <b>DATE</b>
             </div>
           </Col>
-          <Col span={4}>
+          <Col span={6}>
             <div className="assignment-label">
               <b>WORK SUBMISSON</b>
             </div>
@@ -327,11 +327,11 @@ const Assignment = () => {
               <b>EVALATION</b>
             </div>
           </Col>
-          <Col span={2}>
+          {/* <Col span={2}>
             <div className="assignment-label">
               <b>CONFIRMED</b>
             </div>
-          </Col>
+          </Col> */}
           <Col span={2}>
             <div className="assignment-label">
               <b>SENSITIVE</b>
@@ -379,10 +379,10 @@ const AssignmentDisplay = ({ assignment, onCheckboxChange }) => {
         <Col span={5} className="assignment-name">
           {assignment.name}
         </Col>
-        <Col span={4} className="assignment-date">
+        <Col span={3} className="assignment-date">
           {getOrdinalSuffix(assignment?.created_at)}
         </Col>
-        <Col span={4} className="assignment-files">
+        <Col span={6} className="assignment-files">
           {assignment?.student_answer_filepath}
         </Col>
         <Col
@@ -401,7 +401,7 @@ const AssignmentDisplay = ({ assignment, onCheckboxChange }) => {
             <MinusCircleOutlined style={{ color: "red" }} />
           )}
         </Col>{" "}
-        <Col
+        {/* <Col
           span={2}
           className={`assignment-status ${
             assignment.lecture_check_status ? "textwhite-onchecked" : ""
@@ -416,7 +416,7 @@ const AssignmentDisplay = ({ assignment, onCheckboxChange }) => {
           ) : (
             <MinusCircleOutlined style={{ color: "red" }} />
           )}
-        </Col>{" "}
+        </Col>{" "} */}
         <Col
           span={2}
           className={`assignment-status ${
