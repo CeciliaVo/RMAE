@@ -24,6 +24,8 @@ export const PrivacyEndpoint = {
 
 export const EvaEndpoint = {
     'autoEva': "auto/auto-grader",
+    'getByAssignment': "auto/eva/format",
+    'retry': "auto/retry-auto-grader"
 }
 
 export const ResultEndpoint = {

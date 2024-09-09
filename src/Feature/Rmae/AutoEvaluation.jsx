@@ -10,6 +10,9 @@ import { GiReturnArrow } from "react-icons/gi";
 import './AutoEvaluation.css';
 // import ReturnPrePage from './Feature/Course/ReturnPage';
 import ReturnPrePage from '../Course/ReturnPage';
+import { EvaEndpoint } from '../../constants/endpoints';
+import request from "../../utils/request";
+import { useParams } from "react-router-dom";
 
 const { Option } = Select;
 
@@ -82,7 +85,17 @@ const AutoEvaluation = () => {
   const [neverAskAgainChecked, setNeverAskAgainChecked] = useState(false);   
   const selectedStudent = students[selectedStudentIndex];
   const selectedStudentId = selectedStudent.match(/\(([^)]+)\)$/)[1]; 
+  const { assignmentID } = useParams();
 
+  const fetchPrivacyInfo = async () => {
+    const endpoint = EvaEndpoint["getByAssignment"];
+    const resp = await request.get(`${endpoint}/${assignmentID}`);
+    setDatabase([resp]);
+  };
+  
+  useEffect(() => {
+    fetchPrivacyInfo();
+  }, [assignmentID]);
   const studentQuestions = database[0]["Student ID"].map((id, index) => {
     if (id === selectedStudentId) {
       return {
@@ -287,29 +300,35 @@ const AutoEvaluation = () => {
     });
   }
   
-  const reEvaluation = useCallback(() => {
-    if (reAeInstructions.trim().split(/\s+/).length >= 30) {
-      message.success('Re-evaluation request has been submitted.');
-      saveReAeInstructions();
-      setReAeEnabled(false);
-    } else {
-      Modal.warning({
-        title: 'Incomplete Re-evaluation Instruction',
-        content: (
-          <div style={{marginLeft: '-25px',marginRight: '15px', textAlign: 'justify'}}>
-            <p>Please input a clear command for the re-evaluation this student work based on these recommendations:</p>
-            <ul>
-              <li>Point out what you are not happy about the result of the auto-evaluation</li>
-              <li>Make clear what specific standard or requirement you want that Re-evaluation to focus on.</li>
-            </ul>
-            <p>Please input a clear command for the re-evaluation this student work based on these recommendations:</p>
-          </div>
-        ),
-        className: 'custom-modal', 
-        okButtonProps: { className: 'custom-ok-button' },
-      });
-    }
-  }, [reAeInstructions, saveReAeInstructions]);
+  // const reEvaluation = useCallback(() => {
+  //   if (reAeInstructions.trim().split(/\s+/).length >= 30) {
+  //     message.success('Re-evaluation request has been submitted.');
+  //     saveReAeInstructions();
+  //     setReAeEnabled(false);
+  //   } else {
+  //     Modal.warning({
+  //       title: 'Incomplete Re-evaluation Instruction',
+  //       content: (
+  //         <div style={{marginLeft: '-25px',marginRight: '15px', textAlign: 'justify'}}>
+  //           <p>Please input a clear command for the re-evaluation this student work based on these recommendations:</p>
+  //           <ul>
+  //             <li>Point out what you are not happy about the result of the auto-evaluation</li>
+  //             <li>Make clear what specific standard or requirement you want that Re-evaluation to focus on.</li>
+  //           </ul>
+  //           <p>Please input a clear command for the re-evaluation this student work based on these recommendations:</p>
+  //         </div>
+  //       ),
+  //       className: 'custom-modal', 
+  //       okButtonProps: { className: 'custom-ok-button' },
+  //     });
+  //   }
+  // }, [reAeInstructions, saveReAeInstructions]);
+
+  const reEvaluation = async () => {
+    const endpoint = EvaEndpoint["retry"];
+    await request.post(`${endpoint}/${assignmentID}/${studentQuestions[currentQuestionIndex].questionId}?remark_instruction=${reAeInstructions}`);
+    // setDatabase([resp]);
+  }
 
   return (
     <>

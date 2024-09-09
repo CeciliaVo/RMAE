@@ -90,11 +90,12 @@ const Assignment = () => {
         setError("A assignment with the same name already exists");
       } else {
         const formData = new FormData();
-        const assignmentData = {
-            course_id: parseInt(courseID),
-            name: trimmedAssignmentName
-        }
-        formData.append('assignment_data', JSON.stringify(assignmentData))
+        // const assignmentData = {
+        //     course_id: parseInt(courseID),
+        //     name: trimmedAssignmentName
+        // }
+        formData.append('course_id', parseInt(courseID))
+        formData.append('name', trimmedAssignmentName)
         formData.append('student_answers_file', asmStudentWorkFiles[0]);
         formData.append('questions_file', asmQuestsFiles[0]);
         formData.append('criteria_file', asmMCFiles[0]);

@@ -30,7 +30,7 @@ const App = () => {
                         <Route path="/ai-assessment" element={<Rmae />} />
                         <Route path="/asm/:courseID" element={<Assignment />} />
                         <Route path="/privacy/:assignmentID" element={<PrivacyProtection />} />
-                        <Route path="/evaluation" element={<AutoEvaluation />} />
+                        <Route path="/evaluation/:assignmentID" element={<AutoEvaluation />} />
                         <Route path="/finalresult/:assignmentID" element={<FinalResult />} />
                     </Routes>
                     </Content>
