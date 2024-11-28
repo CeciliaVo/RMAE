@@ -1,13 +1,21 @@
+<<<<<<< HEAD
 import React, { useState, useRef } from 'react';
 import { Button, Input, Space, Table, Slider, Divider } from 'antd';
+=======
+import React, { useState, useRef, useEffect } from 'react';
+import { Button, Input, Space, Table, Slider, Divider, Col, InputNumber, Row } from 'antd';
+>>>>>>> e8f77bd4963f74db9c9132205b3d7314365f501b
 import { SearchOutlined, CloseOutlined, FilterOutlined } from '@ant-design/icons';
 import { LuArrowLeftFromLine } from "react-icons/lu";
 import Highlighter from 'react-highlight-words';
 import './FinalResult.css';
 import ReturnPrePage from './ReturnPage';
+import request from '../../utils/request';
+import { ResultEndpoint } from '../../constants/endpoints';
+import { useParams } from "react-router-dom";
 
 const FinalResult = () => {
-    const studentFinalResult = [
+    const raw = [
         {
             "Assignment Question": [3],
             "Student ID": ["s3911365", "s3911365", "s3911365", "s123", "s123", "s123", "s345", "s345", "s345"],
@@ -34,7 +42,17 @@ const FinalResult = () => {
     const [sortedInfo, setSortedInfo] = useState({});
     const [filteredInfo, setFilteredInfo] = useState({});
     const searchInput = useRef(null);
+    const { assignmentID } = useParams();
+    const [keyCount, setKeyCount] = useState(0)
+    // Calculate total score
+    const [studentTotalScore, setStudentTotalScore] = useState({});
+    const [studentFinalResult, setStudentFinalResult] = useState([])
+    const [numQuestions, setNumQuestions] = useState(null);
+    const [feedbackColumnWidth, setFeedbackColumnWidth] = useState('auto');
+    const [scoreColumnWidth, setScoreColumnWidth] = useState('auto')
+    const [maxScores, setMaxScores] = useState({})
 
+<<<<<<< HEAD
     const studentScores = studentFinalResult[0]['Question Score'].map(score => score.split('/').map(Number));
     const actualScores = studentScores.map(score => score[0]);
     const maxScores = studentScores.map(score => score[1]);
@@ -61,6 +79,71 @@ const FinalResult = () => {
             studentTotalScore[studentId].questionMaxScores[parseInt(item['Question ID'][index]) - 1] += maxScores[index];
         });
     });
+=======
+    console.log(studentTotalScore)
+    const fetchResults = async () => {
+        const endpoint = ResultEndpoint["getResult"];
+        const resp = await request.get(`${endpoint}/${assignmentID}`);
+        console.log(resp)
+        let tempTotalScore = {}
+        resp.forEach(item => {
+            console.log(item)
+            item['Question Score'].forEach((score, index) => {
+                const [actualScore, maxScore] = score.split('/').map(Number);
+                const studentId = item['Student ID'][index];
+                if (!tempTotalScore[studentId]) {
+                    tempTotalScore[studentId] = {
+                        name: item['Student Name'][index],
+                        id: studentId,
+                        totalScore: 0,
+                        maxScore: 0,
+                        questionFeedbacks: Array(item['Assignment Question'][0]).fill(''),
+                        questionScores: Array(item['Assignment Question'][0]).fill(''),
+                    };
+                }
+                tempTotalScore[studentId].totalScore += actualScore;
+                tempTotalScore[studentId].maxScore += maxScore;
+                tempTotalScore[studentId].questionFeedbacks[parseInt(item['Question ID'][index].replace(/\D/g, ''), 10) - 1 || 0] = item['Question Feedbacks'][index];
+                tempTotalScore[studentId].questionScores[parseInt(item['Question ID'][index]) - 1] = score;
+            });
+        });
+        setStudentTotalScore(tempTotalScore)
+        setStudentFinalResult(resp)
+        const tmpNumQuestions = resp[0]["Assignment Question"][0];
+        setNumQuestions(tmpNumQuestions);
+        setFeedbackColumnWidth(tmpNumQuestions > 0 ? 80 / (tmpNumQuestions * 2) + '%' : 'auto');
+        setScoreColumnWidth(tmpNumQuestions > 0 ? 20 / (tmpNumQuestions * 2) + '%' : 'auto');
+        setMaxScores(getMaxScoresFromDatabase(resp))
+        setKeyCount(keyCount + 1)
+    };
+
+    // useEffect(() => {
+    //     const tmpNumQuestions = studentFinalResult[0]["Assignment Question"][0];
+    //     setNumQuestions(tmpNumQuestions);
+    //     setFeedbackColumnWidth(tmpNumQuestions > 0 ? 80 / (tmpNumQuestions * 2) + '%' : 'auto');
+    //     setScoreColumnWidth(tmpNumQuestions > 0 ? 20 / (tmpNumQuestions * 2) + '%' : 'auto');
+    // }, [studentFinalResult])
+
+    useEffect(() => {
+        fetchResults();
+      }, [assignmentID])
+
+    const getMaxScoresFromDatabase = (results) => {
+        const maxScores = {};
+        results.length && results.forEach(item => {
+            item['Question Score'].forEach((score, index) => {
+                const questionId = item['Question ID'][index];
+                const [actualScore, maxScore] = score.split('/').map(Number);
+                maxScores[questionId] = Math.max(maxScores[questionId] || 0, maxScore);
+            });
+        });
+        return maxScores;
+    };
+    
+
+    
+    
+>>>>>>> e8f77bd4963f74db9c9132205b3d7314365f501b
 
     // Convert the studentTotalScore object to an array for the Table component
     const tableData = Object.values(studentTotalScore).map(student => ({
@@ -68,6 +151,9 @@ const FinalResult = () => {
         ...student,
         overall: ((student.totalScore / student.maxScore) * 100).toFixed(2) + '%',
     }));
+
+    console.log(tableData)
+    console.log(studentTotalScore)
 
     const handleChange = (pagination, filters, sorter) => {
         setFilteredInfo(filters);
@@ -188,10 +274,13 @@ const FinalResult = () => {
         };
     };
 
+<<<<<<< HEAD
     const numQuestions = studentFinalResult[0]["Assignment Question"][0];
     const feedbackColumnWidth = numQuestions > 0 ? 80 / (numQuestions * 2) + '%' : 'auto';
     const scoreColumnWidth = numQuestions > 0 ? 20 / (numQuestions * 2) + '%' : 'auto';
 
+=======
+>>>>>>> e8f77bd4963f74db9c9132205b3d7314365f501b
 
     const tableColumns = [
         {
@@ -214,7 +303,11 @@ const FinalResult = () => {
                         key: `q${i + 1}Feedback`,
                         width: feedbackColumnWidth,
                         render: (text, record) => (
+<<<<<<< HEAD
                             <div>{record.questionFeedbacks[i].split('\n').map((line, index) => <span key={index}>{line}<br/></span>)}</div>
+=======
+                            record.questionFeedbacks[i] !== null && <div>{record.questionFeedbacks[i].split('\n').map((line, index) => <span key={index}>{line}<br/></span>)}</div>
+>>>>>>> e8f77bd4963f74db9c9132205b3d7314365f501b
                         ),
                     },
                     {
@@ -224,7 +317,11 @@ const FinalResult = () => {
                         width: scoreColumnWidth,
                         ...filterQuestionScoreColumn(`q${i + 1}Score`, i),
                         render: (text, record) => (
+<<<<<<< HEAD
                             <div style={{ textAlign: 'center' }}>{record.questionActualScores[i]}</div> 
+=======
+                            <div style={{ textAlign: 'center' }}>{record.questionActualScores && record.questionActualScores[i]}</div> 
+>>>>>>> e8f77bd4963f74db9c9132205b3d7314365f501b
                         ),
                     }                    
                 ],
@@ -261,7 +358,12 @@ const FinalResult = () => {
             </div>
 
             <div className='pp-container'>
+<<<<<<< HEAD
                 <Table
+=======
+                <Table 
+                    key={keyCount}
+>>>>>>> e8f77bd4963f74db9c9132205b3d7314365f501b
                     className="table-row"
                     dataSource={tableData}
                     columns={tableColumns}

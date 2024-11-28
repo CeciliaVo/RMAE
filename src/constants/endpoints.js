@@ -19,4 +19,9 @@ export const StudentAnswerEndpoint = {
 
 export const PrivacyEndpoint = {
     'privacyProtection': "auto/privacy-protection",
+    'privacyUpdate': 'auto/privacy/update'
+}
+
+export const ResultEndpoint = {
+    'getResult': "auto/result",
 }
